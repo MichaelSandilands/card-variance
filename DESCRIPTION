@@ -2,7 +2,7 @@ Type: Project
 Package: cardvariance
 Title: Card Payments Variance Pipeline and Shiny App
 Version: 0.1.0
-Description: Weekly targets pipeline that pulls the Central Bank of Ireland
+Description: A targets pipeline that pulls the Central Bank of Ireland
     monthly card payment statistics, computes MoM, QoQ (complete quarters
     only), YoY and YTD variances, validates each release, and publishes it to
     Cloudflare R2 for a Shiny app on Posit Connect.

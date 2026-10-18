@@ -9,11 +9,28 @@
 
 card_board <- function(mode = Sys.getenv("CARDVAR_BOARD", "local")) {
   if (identical(mode, "r2")) return(r2_board())
+  pins::board_folder(local_board_path(), versioned = TRUE)
+}
+
+local_board_path <- function() {
   path <- Sys.getenv("CARDVAR_LOCAL_BOARD", "")
-  if (!nzchar(path)) {
-    path <- if (dir.exists("pins-local") || !dir.exists("../pins-local")) "pins-local" else "../pins-local"
+  if (nzchar(path)) return(path)
+  if (dir.exists("pins-local") || !dir.exists("../pins-local")) "pins-local" else "../pins-local"
+}
+
+# A blank R2_PREFIX= line would otherwise put every pin at the bucket root.
+r2_prefix <- function() {
+  prefix <- Sys.getenv("R2_PREFIX")
+  if (nzchar(prefix)) prefix else "card-variance/"
+}
+
+# Which board the pipeline writes to. A target depends on it, so switching board
+# (local to R2, say) re-uploads the raw files instead of skipping them as unchanged.
+board_identity <- function(mode = Sys.getenv("CARDVAR_BOARD", "local")) {
+  if (identical(mode, "r2")) {
+    return(paste("r2", Sys.getenv("R2_ACCOUNT_ID"), Sys.getenv("R2_BUCKET"), r2_prefix()))
   }
-  pins::board_folder(path, versioned = TRUE)
+  paste("local", normalizePath(local_board_path(), mustWork = FALSE))
 }
 
 r2_board <- function() {
@@ -32,7 +49,7 @@ r2_board <- function() {
   }
   pins::board_s3(
     bucket = Sys.getenv("R2_BUCKET"),
-    prefix = Sys.getenv("R2_PREFIX", "card-variance/"),
+    prefix = r2_prefix(),
     region = "auto",
     endpoint = endpoint,
     access_key = Sys.getenv("R2_ACCESS_KEY_ID"),

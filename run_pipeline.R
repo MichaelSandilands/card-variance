@@ -1,4 +1,4 @@
-# Entry point for scheduled runs (GitHub Actions, Posit Connect, cron).
+# Entry point: CARDVAR_BOARD=r2 Rscript run_pipeline.R (by hand, from cron, or on Posit Connect).
 # Runs the pipeline, then writes a short Markdown summary of the outcome.
 
 targets::tar_make()

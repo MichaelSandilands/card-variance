@@ -3,8 +3,8 @@ title: "Card payments variance refresh"
 output: html_document
 ---
 
-Alternative to the GitHub Actions schedule: deploy this document to Posit
-Connect and give it a weekly schedule. Set `CARDVAR_BOARD=r2` and the four
+Scheduled refresh: deploy this document to a Posit Connect server that the Bank's
+site accepts (its firewall challenges cloud servers) and give it a weekly schedule. Set `CARDVAR_BOARD=r2` and the four
 `R2_*` variables (a read-and-write R2 token) in the content's Vars panel.
 
 Deploy from the project root. The file list keeps the bundle to what the pipeline

@@ -1,6 +1,6 @@
 # Card payments variance
 
-A weekly pipeline and Shiny app for validating the Central Bank of Ireland's
+A pipeline and Shiny app for validating the Central Bank of Ireland's
 [Monthly Card Payment Statistics](https://www.centralbank.ie/statistics/data-and-analysis/monthly-card-payment-statistics)
 before regulatory submission. It computes MoM, QoQ (complete quarters only), YoY
 and YTD variances. It checks each release for structure, completeness,
@@ -8,7 +8,7 @@ reconciliation and plausibility, records what changed since the last release, an
 shows it all with downloadable evidence.
 
 ```
-Central Bank CKAN ──► targets pipeline (GitHub Actions, weekly) ──► Cloudflare R2 ──► Shiny app (Posit Connect)
+Central Bank CKAN ──► targets pipeline (run on your machine)  ──► Cloudflare R2 ──► Shiny app (Posit Connect)
                       download · hash · snapshot · tidy ·             versioned pins:      reads releases only,
                       variances · validation · revisions              raw files, datasets,  never recalculates
                                                                       releases, run log
@@ -18,7 +18,7 @@ Central Bank CKAN ──► targets pipeline (GitHub Actions, weekly) ──► 
 
 ```sh
 # from the project root, R >= 4.3 (renv bootstraps itself the first time R starts here)
-Rscript -e 'renv::restore()'     # once renv.lock is committed; until then: renv::install()
+Rscript -e 'renv::restore()'
 
 export CARDVAR_SOURCE=fixtures CARDVAR_BOARD=local
 CARDVAR_FIXTURE_DIR=tests/fixtures/release_2026-07 Rscript run_pipeline.R   # first release
@@ -36,25 +36,27 @@ Accommodation spike, and a missing February 2024 month for Leitrim
 
 1. **R2 bucket.** Create a bucket, then two API tokens under *R2 > Manage R2 API tokens*:
    *Object Read & Write* for the pipeline and *Object Read* for the app.
-2. **Pipeline secrets.** In the GitHub repository, under *Settings > Secrets and variables > Actions*,
-   add the secrets `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` (read-write token), and
-   `R2_ACCOUNT_ID` and `R2_BUCKET` as secrets or, since neither is sensitive, as variables.
-   Optionally add the variable `R2_PREFIX` (default `card-variance/`). `.github/workflows/refresh.yml` then runs every Monday at 06:00 UTC,
-   and you can also start it by hand from the *Actions* tab. Each run starts clean and compares
-   with what is already in R2, so a week with no new data writes only the run log. GitHub turns
-   off scheduled workflows in public repositories after 60 days without a commit; if that happens,
-   re-enable it on the *Actions* tab.
-3. **First live run.** Run the workflow once by hand and check the points under
+2. **Credentials.** Copy `.Renviron.example` to `.Renviron` (git-ignored) and fill in the
+   read-write token, plus the read-only pair if you will deploy the app.
+3. **Publish a release.** When the Bank publishes new figures, run from the project root:
+
+   ```sh
+   CARDVAR_BOARD=r2 Rscript run_pipeline.R
+   ```
+
+   It writes `pipeline_summary.md` and exits with status 2 if a dataset was blocked. A run with
+   no new data writes only the run log. After the first one, check the points under
    *First live run* below.
-4. **Deploy the app.** Set the read-only token in `.Renviron` (see `.Renviron.example`),
-   then run `Rscript deploy/deploy_connect.R`. The script copies the variables to the
-   content's Vars panel on Connect, where they are stored encrypted.
+4. **Deploy the app.** Run `Rscript deploy/deploy_connect.R`. The script copies the variables
+   to the content's Vars panel on Connect, where they are stored encrypted, using the read-only
+   token when `.Renviron` has one.
 
-To schedule on Posit Connect instead of GitHub, deploy `refresh_connect.Rmd` (instructions inside)
-and give it a weekly schedule.
+The pipeline runs where the Bank's site accepts it. Its firewall (AWS WAF) answers cloud servers,
+GitHub's runners included, with a browser challenge that a script cannot pass, so a scheduled
+refresh needs a machine on an ordinary connection. `refresh_connect.Rmd` schedules it on a Posit
+Connect server that the Bank accepts (instructions inside).
 
-Set `source.user_agent` in `config/datasets.yml` to a real contact address. The Bank's site
-refuses some automated clients, so confirm the download works from wherever the job runs.
+Set `source.user_agent` in `config/datasets.yml` to a real contact address.
 
 ## Package versions with renv
 
@@ -88,16 +90,16 @@ on the first real run. The app's *About* tab shows every column with the role it
       months (see below). Review the learned rules on the *Validation* tab. Add explicit rules
       or cross-file checks under `rules:` and `cross_checks:` where you know the identity.
 - [ ] **Counties.** The boundary file (Tailte Éireann, CC BY 4.0) is downloaded to
-      `data/ref/counties.geojson` (on every GitHub run, since each starts clean). The *Every county in the data has a boundary* check confirms
+      `data/ref/counties.geojson`. The *Every county in the data has a boundary* check confirms
       the names match.
 - [ ] **Population (optional).** For the map's *per 1,000 residents* view, add
       `config/county_population.csv` with columns `county,population`, using the CSO Census 2022
       figures (PxStat table FP001 or the Census 2022 Main Results).
 
-## How a weekly run works
+## How a run works
 
 1. Download the four CSVs. targets hashes each one, so nothing downstream runs if a
-   file has not changed. The Bank publishes monthly, so most weekly runs stop here.
+   file has not changed (or the board, local or R2, has not).
 2. Store every distinct raw file as a pin version in R2, so any release can be reproduced.
 3. Profile columns. A code column `X` with a label `X_DESC` becomes one filter showing the label.
    Constant columns move to the *About* tab, and columns that repeat another one-to-one (such as
@@ -181,7 +183,7 @@ tests/testthat/       unit tests (112)
 tests/fixtures/       synthetic releases and their generator
 deploy/               Posit Connect deployment
 renv/, renv.lock      renv setup and locked package versions
-.github/workflows/    weekly refresh and tests
+.github/workflows/    tests
 .Renviron.example     the R2 variables the app and deploy script read
 ```
 

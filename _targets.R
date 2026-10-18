@@ -34,8 +34,11 @@ per_dataset <- tar_map(
   # Fixed path data/incoming/<id>.csv, re-downloaded every run and hashed by targets.
   tar_target(incoming, download_resource(source_meta, resource_id, id, config),
              format = "file", cue = tar_cue(mode = "always")),
-  # Runs only when the file changed: keeps the raw release on the board.
-  tar_target(snapshot, keep_snapshot(incoming, id, resource_id, source_meta)),
+  # Runs when the file or the board changed: keeps the raw release on the board.
+  tar_target(snapshot, {
+    board_id
+    keep_snapshot(incoming, id, resource_id, source_meta)
+  }),
   tar_target(raw, read_snapshot(incoming)),
   tar_target(schema, check_schema(raw, id)),
   tar_target(profile, profile_dataset(raw, config$datasets[[id]], config$labels)),
@@ -56,6 +59,7 @@ list(
     read_config(config_file)
   }),
   tar_target(source_meta, get_source_meta(config), cue = tar_cue(mode = "always")),
+  tar_target(board_id, board_identity(), cue = tar_cue(mode = "always")),
   per_dataset,
   tar_target(geo, prepare_counties(config)),
   tar_target(population, read_population(config), cue = tar_cue(mode = "always")),
