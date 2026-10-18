@@ -36,10 +36,10 @@ Accommodation spike, and a missing February 2024 month for Leitrim
 
 1. **R2 bucket.** Create a bucket, then two API tokens under *R2 > Manage R2 API tokens*:
    *Object Read & Write* for the pipeline and *Object Read* for the app.
-2. **Pipeline secrets.** In the GitHub repository, add the secrets `R2_ACCOUNT_ID`,
-   `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` and `R2_BUCKET` (read-write token) under *Settings >
-   Secrets and variables > Actions*. Optionally add the variable `R2_PREFIX` on the *Variables* tab
-   (default `card-variance/`). `.github/workflows/refresh.yml` then runs every Monday at 06:00 UTC,
+2. **Pipeline secrets.** In the GitHub repository, under *Settings > Secrets and variables > Actions*,
+   add the secrets `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` (read-write token), and
+   `R2_ACCOUNT_ID` and `R2_BUCKET` as secrets or, since neither is sensitive, as variables.
+   Optionally add the variable `R2_PREFIX` (default `card-variance/`). `.github/workflows/refresh.yml` then runs every Monday at 06:00 UTC,
    and you can also start it by hand from the *Actions* tab. Each run starts clean and compares
    with what is already in R2, so a week with no new data writes only the run log. GitHub turns
    off scheduled workflows in public repositories after 60 days without a commit; if that happens,

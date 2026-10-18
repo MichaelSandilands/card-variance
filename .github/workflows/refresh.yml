@@ -1,7 +1,8 @@
 # Weekly refresh: download the Bank's files, validate, and publish a release to R2.
 #
-# Needs repository secrets R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY and R2_BUCKET
-# (an R2 token with Object Read & Write) and, optionally, the repository variable R2_PREFIX.
+# Needs the repository secrets R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY (an R2 token with Object
+# Read & Write), and R2_ACCOUNT_ID and R2_BUCKET as secrets or variables (neither is sensitive).
+# The repository variable R2_PREFIX is optional.
 # Each run starts clean: the pipeline compares with what is already in R2, so nothing needs
 # to carry over between runs. A blocked dataset fails the run, and GitHub emails you.
 
@@ -27,10 +28,10 @@ jobs:
     env:
       CARDVAR_SOURCE: live
       CARDVAR_BOARD: r2
-      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID || vars.R2_ACCOUNT_ID }}
       R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
       R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET || vars.R2_BUCKET }}
       # An unset variable would arrive as "", which would put the pins at the bucket root.
       R2_PREFIX: ${{ vars.R2_PREFIX || 'card-variance/' }}
     steps:
