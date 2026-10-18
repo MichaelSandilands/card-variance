@@ -1,0 +1,115 @@
+# Card payments variance - dataset rules
+#
+# Column roles are detected from each CSV automatically:
+#   * a code column X with a label column X_DESC  -> filter on X_DESC, code hidden
+#   * a column with one value                     -> shown in "About", not a filter
+#   * a column that repeats another one 1:1       -> hidden as redundant
+#   * SERIES_KEY                                   -> series identifier (shown in tables)
+# Anything set here overrides the detection.
+
+source:
+  ckan_base: https://opendata.centralbank.ie
+  package_id: 19af4a3e-ed9f-41ee-ad9b-52dc72354a15
+  # Identify the job to the Central Bank's servers. Put a real contact address here.
+  user_agent: "card-variance-pipeline (contact: change-me@example.com)"
+
+boundaries:
+  # Tailte Eireann, Counties - National Statutory Boundaries - 2019 - Generalised 20m (CC BY 4.0)
+  url: https://data-osi.opendata.arcgis.com/api/download/v1/items/7ef9c5102d61424295e98505a00251ea/geojson?layers=0
+  cache: data/ref/counties.geojson
+  name_col: auto   # or the attribute holding county names, e.g. COUNTY
+
+population:
+  # Optional. Columns: county, population. Enables "per 1,000 residents" on the map.
+  # Source to use: CSO Census 2022 county populations (PxStat table FP001 or the Main Results).
+  file: data/ref/county_population.csv
+
+thresholds:
+  mom_pct: 0.20          # latest MoM move larger than this is flagged for review
+  yoy_pct: 0.30          # latest YoY move larger than this is flagged for review
+  atv_mom_pct: 0.15      # average transaction value move larger than this is flagged
+  sum_rule_share: 0.95   # a total is treated as "sum of parts" if that held in this share of past months
+  anomaly_iqr_factor: 3  # STL remainder outside Q1 - k*IQR .. Q3 + k*IQR (timetk anomalize default, alpha = 0.05)
+  materiality_share: 0.001  # ignore series smaller than this share of the largest in their unit
+
+datasets:
+  mpci:
+    title: Cards issued
+    resource_id: 09fb7335-f89f-4c47-89be-5e4156a61a37
+    file: mpci_data.csv
+    measure_type: stock      # period-end value: QoQ uses the quarter-end month, YTD compares with December
+    caveats:
+      - Personal cards issued to Irish residents only; business cards are excluded.
+  mpcp:
+    title: Card payments
+    resource_id: 48aca6f9-bfd2-40fd-b746-e93c0ee32e41
+    file: mpcp_cardpayments.csv
+    measure_type: flow       # summed over a quarter or year-to-date
+    caveats:
+      - Households only; business cards are excluded.
+      - Credit and debit card payments are not split.
+      - Cash withdrawals include ATM withdrawals and point-of-sale cashback and sit outside card payments.
+      - The series breaks from the discontinued Credit and Debit Card Statistics (Table A.13); do not compare across the break.
+      - Reporting agents entering or leaving the market cause level shifts.
+  mpcy:
+    title: Card payments by county
+    resource_id: 5503f6fb-b83b-472d-b755-694f4daf4a58
+    file: mpcy_cardpaymentsbycounty.csv
+    measure_type: flow
+    county_dim: COUNTY
+    caveats:
+      - County is the location of the terminal that processed the payment, not the cardholder's home.
+      - Online spend is booked to the merchant's head office, which inflates Dublin.
+  mpmc:
+    title: Card payments by merchant category
+    resource_id: 6ecf9975-8bc9-4872-a62c-7916a7f8988f
+    file: mpmc_cardpaymentsbymerchantcategory.csv
+    measure_type: flow
+    caveats:
+      - Sectors and sub-sectors are derived by the Central Bank from merchant category codes.
+      - Financial Services spending is falling as payments move to Open Banking and account-to-account transfers.
+
+# Display names for dimension codes (ECB payment statistics model).
+# Anything not listed is shown as its column name in sentence case.
+labels:
+  REF_AREA: Reference area
+  COUNT_AREA: Counterpart area
+  COUNTERPART_AREA: Counterpart area
+  HOLDER_AREA: Cardholder area
+  TRMNL_LCTN: Terminal location
+  TYP_TRNSCTN: Transaction type
+  RL_TRNSCTN: Role in transaction
+  INTTN_CHNNL: Initiation channel
+  RMT_INTTN: Remote or non-remote
+  PYMNT_SCHM: Payment scheme
+  CRD_FNCTN: Card function
+  SCA: Strong customer authentication
+  FRD_TYP: Fraud type
+  TRANSFORMATION: Transformation
+  UNIT_MEASURE: Unit
+  UNITS: Units
+  FREQ: Frequency
+  COUNTY: County
+  SECTOR: Sector
+  MRCHNT_CTGRY: Merchant category
+  CONFIDENTIALITY_FLAG: Confidentiality
+
+# Explicit reconciliation rules, on top of the rules learned from history.
+# Values are the labels shown in the app (the _DESC text). Example:
+# rules:
+#   - dataset: mpcp
+#     name: Domestic plus non-domestic equals world
+#     dim: COUNT_AREA
+#     parent: World
+#     children: [Domestic, Rest of the world]
+#     type: sum          # sum | subset
+#     severity: fail     # fail | warn
+rules: []
+
+# Cross-file checks. Example: county total against domestic card payments.
+# cross_checks:
+#   - name: County sum vs domestic card payments
+#     left:  {dataset: mpcy, sum_over: COUNTY, where: {RMT_INTTN: Total}}
+#     right: {dataset: mpcp, where: {COUNT_AREA: Domestic, RMT_INTTN: Total, INTTN_CHNNL: Total}}
+#     severity: warn
+cross_checks: []

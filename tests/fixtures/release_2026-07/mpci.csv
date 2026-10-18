@@ -1,0 +1,213 @@
+REPORTING_PERIOD,SERIES_KEY,OBSERVATION_FREE,CONFIDENTIALITY_FLAG,FREQ,FREQ_DESC,REF_AREA,REF_AREA_DESC,HOLDER_AREA,HOLDER_AREA_DESC,PYMNT_SCHM,PYMNT_SCHM_DESC,CRD_FNCTN,CRD_FNCTN_DESC,UNIT_MEASURE,UNIT_MEASURE_DESC
+2022-03-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5249817,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-04-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5243896,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-05-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5255539,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-06-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5284849,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-07-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5294622,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-08-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5313365,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-09-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5340468,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-10-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5361456,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-11-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5370962,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-12-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5382776,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-01-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5381837,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-02-28T00:00:00,PAY.M.IE.IE._Z.1.PN,5395124,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-03-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5439318,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-04-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5430374,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-05-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5457625,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-06-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5456990,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-07-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5499571,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-08-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5521770,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-09-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5521069,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-10-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5524965,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-11-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5555510,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2023-12-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5573137,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-01-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5568052,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-02-29T00:00:00,PAY.M.IE.IE._Z.1.PN,5586779,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-03-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5610060,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-04-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5624587,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-05-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5650388,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-06-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5647190,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-07-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5688087,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-08-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5687881,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-09-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5715798,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-10-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5733396,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-11-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5740457,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2024-12-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5755609,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-01-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5776330,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-02-28T00:00:00,PAY.M.IE.IE._Z.1.PN,5791471,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-03-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5816523,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-04-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5812919,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-05-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5855143,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-06-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5844396,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-07-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5863632,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-08-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5885614,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-09-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5900813,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-10-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5934912,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-11-30T00:00:00,PAY.M.IE.IE._Z.1.PN,5949529,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2025-12-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5964002,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2026-01-31T00:00:00,PAY.M.IE.IE._Z.1.PN,5987324,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2026-02-28T00:00:00,PAY.M.IE.IE._Z.1.PN,6011458,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2026-03-31T00:00:00,PAY.M.IE.IE._Z.1.PN,6013759,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2026-04-30T00:00:00,PAY.M.IE.IE._Z.1.PN,6010310,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2026-05-31T00:00:00,PAY.M.IE.IE._Z.1.PN,6043561,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2026-06-30T00:00:00,PAY.M.IE.IE._Z.1.PN,6076435,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2026-07-31T00:00:00,PAY.M.IE.IE._Z.1.PN,6090074,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,1,Debit,PN,Pure number
+2022-03-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1384469,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-04-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1386348,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-05-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1387541,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-06-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1391088,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-07-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1388061,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-08-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1392799,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-09-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1393613,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-10-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1396894,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-11-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1396720,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-12-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1399772,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-01-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1396989,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-02-28T00:00:00,PAY.M.IE.IE._Z.2.PN,1398846,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-03-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1402928,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-04-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1403724,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-05-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1404996,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-06-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1406235,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-07-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1403223,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-08-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1405374,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-09-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1405313,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-10-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1409380,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-11-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1412482,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2023-12-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1411389,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-01-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1417721,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-02-29T00:00:00,PAY.M.IE.IE._Z.2.PN,1410658,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-03-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1411687,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-04-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1417400,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-05-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1415538,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-06-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1419495,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-07-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1423759,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-08-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1425192,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-09-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1423011,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-10-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1424269,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-11-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1427927,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2024-12-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1426774,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-01-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1427990,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-02-28T00:00:00,PAY.M.IE.IE._Z.2.PN,1428752,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-03-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1429705,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-04-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1425806,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-05-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1434048,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-06-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1426894,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-07-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1432118,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-08-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1432473,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-09-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1442048,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-10-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1439175,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-11-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1441398,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2025-12-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1440479,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2026-01-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1438394,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2026-02-28T00:00:00,PAY.M.IE.IE._Z.2.PN,1441295,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2026-03-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1444072,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2026-04-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1442449,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2026-05-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1446301,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2026-06-30T00:00:00,PAY.M.IE.IE._Z.2.PN,1447418,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2026-07-31T00:00:00,PAY.M.IE.IE._Z.2.PN,1448196,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,2,Credit,PN,Pure number
+2022-03-31T00:00:00,PAY.M.IE.IE._Z.3.PN,150644,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-04-30T00:00:00,PAY.M.IE.IE._Z.3.PN,149904,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-05-31T00:00:00,PAY.M.IE.IE._Z.3.PN,149118,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-06-30T00:00:00,PAY.M.IE.IE._Z.3.PN,148814,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-07-31T00:00:00,PAY.M.IE.IE._Z.3.PN,148475,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-08-31T00:00:00,PAY.M.IE.IE._Z.3.PN,148131,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-09-30T00:00:00,PAY.M.IE.IE._Z.3.PN,146835,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-10-31T00:00:00,PAY.M.IE.IE._Z.3.PN,145470,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-11-30T00:00:00,PAY.M.IE.IE._Z.3.PN,145716,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-12-31T00:00:00,PAY.M.IE.IE._Z.3.PN,145290,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-01-31T00:00:00,PAY.M.IE.IE._Z.3.PN,143738,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-02-28T00:00:00,PAY.M.IE.IE._Z.3.PN,143877,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-03-31T00:00:00,PAY.M.IE.IE._Z.3.PN,143146,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-04-30T00:00:00,PAY.M.IE.IE._Z.3.PN,142215,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-05-31T00:00:00,PAY.M.IE.IE._Z.3.PN,141803,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-06-30T00:00:00,PAY.M.IE.IE._Z.3.PN,141166,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-07-31T00:00:00,PAY.M.IE.IE._Z.3.PN,140979,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-08-31T00:00:00,PAY.M.IE.IE._Z.3.PN,140293,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-09-30T00:00:00,PAY.M.IE.IE._Z.3.PN,139318,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-10-31T00:00:00,PAY.M.IE.IE._Z.3.PN,138882,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-11-30T00:00:00,PAY.M.IE.IE._Z.3.PN,137821,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2023-12-31T00:00:00,PAY.M.IE.IE._Z.3.PN,137553,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-01-31T00:00:00,PAY.M.IE.IE._Z.3.PN,137252,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-02-29T00:00:00,PAY.M.IE.IE._Z.3.PN,136360,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-03-31T00:00:00,PAY.M.IE.IE._Z.3.PN,136522,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-04-30T00:00:00,PAY.M.IE.IE._Z.3.PN,135359,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-05-31T00:00:00,PAY.M.IE.IE._Z.3.PN,134498,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-06-30T00:00:00,PAY.M.IE.IE._Z.3.PN,134143,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-07-31T00:00:00,PAY.M.IE.IE._Z.3.PN,133573,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-08-31T00:00:00,PAY.M.IE.IE._Z.3.PN,132998,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-09-30T00:00:00,PAY.M.IE.IE._Z.3.PN,132452,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-10-31T00:00:00,PAY.M.IE.IE._Z.3.PN,131448,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-11-30T00:00:00,PAY.M.IE.IE._Z.3.PN,131109,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2024-12-31T00:00:00,PAY.M.IE.IE._Z.3.PN,130851,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-01-31T00:00:00,PAY.M.IE.IE._Z.3.PN,130001,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-02-28T00:00:00,PAY.M.IE.IE._Z.3.PN,129814,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-03-31T00:00:00,PAY.M.IE.IE._Z.3.PN,128800,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-04-30T00:00:00,PAY.M.IE.IE._Z.3.PN,128197,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-05-31T00:00:00,PAY.M.IE.IE._Z.3.PN,128198,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-06-30T00:00:00,PAY.M.IE.IE._Z.3.PN,127749,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-07-31T00:00:00,PAY.M.IE.IE._Z.3.PN,126720,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-08-31T00:00:00,PAY.M.IE.IE._Z.3.PN,126169,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-09-30T00:00:00,PAY.M.IE.IE._Z.3.PN,125667,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-10-31T00:00:00,PAY.M.IE.IE._Z.3.PN,124924,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-11-30T00:00:00,PAY.M.IE.IE._Z.3.PN,124611,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2025-12-31T00:00:00,PAY.M.IE.IE._Z.3.PN,124264,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2026-01-31T00:00:00,PAY.M.IE.IE._Z.3.PN,123496,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2026-02-28T00:00:00,PAY.M.IE.IE._Z.3.PN,123248,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2026-03-31T00:00:00,PAY.M.IE.IE._Z.3.PN,121965,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2026-04-30T00:00:00,PAY.M.IE.IE._Z.3.PN,122363,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2026-05-31T00:00:00,PAY.M.IE.IE._Z.3.PN,121879,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2026-06-30T00:00:00,PAY.M.IE.IE._Z.3.PN,121337,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2026-07-31T00:00:00,PAY.M.IE.IE._Z.3.PN,120983,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,3,Delayed debit,PN,Pure number
+2022-03-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6784930,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-04-30T00:00:00,PAY.M.IE.IE._Z.0.PN,6780148,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-05-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6792198,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-06-30T00:00:00,PAY.M.IE.IE._Z.0.PN,6824751,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-07-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6831158,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-08-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6854295,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-09-30T00:00:00,PAY.M.IE.IE._Z.0.PN,6880916,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-10-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6903820,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-11-30T00:00:00,PAY.M.IE.IE._Z.0.PN,6913398,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2022-12-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6927838,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-01-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6922564,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-02-28T00:00:00,PAY.M.IE.IE._Z.0.PN,6937847,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-03-31T00:00:00,PAY.M.IE.IE._Z.0.PN,6985392,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-04-30T00:00:00,PAY.M.IE.IE._Z.0.PN,6976313,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-05-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7004424,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-06-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7004391,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-07-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7043773,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-08-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7067437,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-09-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7065700,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-10-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7073227,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-11-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7105813,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2023-12-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7122079,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-01-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7123025,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-02-29T00:00:00,PAY.M.IE.IE._Z.0.PN,7133797,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-03-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7158269,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-04-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7177346,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-05-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7200424,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-06-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7200828,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-07-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7245419,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-08-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7246071,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-09-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7271261,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-10-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7289113,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-11-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7299493,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2024-12-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7313234,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-01-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7334321,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-02-28T00:00:00,PAY.M.IE.IE._Z.0.PN,7350037,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-03-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7375028,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-04-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7366922,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-05-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7417389,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-06-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7399039,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-07-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7422470,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-08-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7444256,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-09-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7468528,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-10-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7499011,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-11-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7515538,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2025-12-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7528745,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2026-01-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7549214,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2026-02-28T00:00:00,PAY.M.IE.IE._Z.0.PN,7576001,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2026-03-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7579796,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2026-04-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7575122,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2026-05-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7611741,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2026-06-30T00:00:00,PAY.M.IE.IE._Z.0.PN,7645190,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number
+2026-07-31T00:00:00,PAY.M.IE.IE._Z.0.PN,7659253,F,M,Monthly,IE,Ireland,IE,Ireland,_Z,Not applicable,0,All card functions,PN,Pure number

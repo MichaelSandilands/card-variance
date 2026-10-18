@@ -1,0 +1,39 @@
+Type: Project
+Package: cardvariance
+Title: Card Payments Variance Pipeline and Shiny App
+Version: 0.1.0
+Description: Weekly targets pipeline that pulls the Central Bank of Ireland
+    monthly card payment statistics, computes MoM, QoQ (complete quarters
+    only), YoY and YTD variances, validates each release, and publishes it to
+    Cloudflare R2 for a Shiny app on Posit Connect.
+License: MIT
+Encoding: UTF-8
+Depends: R (>= 4.3)
+Imports:
+    bslib (>= 0.6.1),
+    digest,
+    dplyr,
+    htmltools,
+    httr2 (>= 1.0.0),
+    leaflet,
+    lubridate,
+    paws.storage,
+    pins (>= 1.4.0),
+    plotly,
+    reactable,
+    readr,
+    sf,
+    shiny (>= 1.8.0),
+    stringi,
+    tarchetypes,
+    targets,
+    tibble,
+    tidyr,
+    timetk (>= 2.9.0),
+    writexl,
+    yaml
+Suggests:
+    rmarkdown,
+    rsconnect,
+    testthat (>= 3.0.0),
+    withr

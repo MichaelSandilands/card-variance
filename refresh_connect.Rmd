@@ -1,0 +1,24 @@
+---
+title: "Card payments variance refresh"
+output: html_document
+---
+
+Alternative to the GitHub Actions schedule: deploy this document to Posit
+Connect and give it a weekly schedule. Set `CARDVAR_BOARD=r2` and the four
+`R2_*` variables (a read-and-write R2 token) in the content's Vars panel.
+
+Deploy from the project root:
+
+    rsconnect::deployApp(appDir = ".", appPrimaryDoc = "refresh_connect.Rmd",
+                         appName = "card-payments-variance-refresh",
+                         envVars = c("CARDVAR_BOARD", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID",
+                                     "R2_SECRET_ACCESS_KEY", "R2_BUCKET", "R2_PREFIX"))
+
+```{r refresh, message = FALSE}
+targets::tar_make(reporter = "silent")
+release <- targets::tar_read(release)
+```
+
+```{r summary, results = "asis"}
+cat(release$summary_md)
+```
