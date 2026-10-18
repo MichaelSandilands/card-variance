@@ -1,0 +1,15 @@
+file: mpmc.csv
+file_size: 81560445
+pin_hash: e46c40c93af16a1b
+type: file
+title: Raw mpmc release
+description: Raw CSV as downloaded from https://opendata.centralbank.ie/dataset/19af4a3e-ed9f-41ee-ad9b-52dc72354a15/resource/6ecf9975-8bc9-4872-a62c-7916a7f8988f/download/mpmc_cardpaymentsbymerchantcategory.csv
+tags: ~
+urls: ~
+created: 20261018T170143Z
+api_version: 1
+user:
+  sha256: 87b7c5407bbbb9d88d58277977e92dc28380f78fda9777c642cfd7b8ef521cbb
+  retrieved_at: '2026-10-18T17:01:43Z'
+  source_url: https://opendata.centralbank.ie/dataset/19af4a3e-ed9f-41ee-ad9b-52dc72354a15/resource/6ecf9975-8bc9-4872-a62c-7916a7f8988f/download/mpmc_cardpaymentsbymerchantcategory.csv
+  source_last_modified: 2024-04-02T16:46:54.108037

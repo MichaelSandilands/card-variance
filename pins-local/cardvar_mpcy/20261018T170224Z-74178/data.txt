@@ -1,0 +1,20 @@
+file: cardvar_mpcy.rds
+file_size: 598132
+pin_hash: 74178f5b9b09ac58
+type: rds
+title: Card payments by county
+description: Card variance dataset mpcy
+tags: ~
+urls: ~
+created: 20261018T170224Z
+api_version: 1
+user:
+  obj_hash: ba07d8bec6fd06e9505c380ac9c2d2a0
+  sha256: 291ce717171ea20420379224665d7c030a92154f407471db14579e1e1d7d167e
+  last_month: '2026-08-01'
+  counts:
+    stop: 0
+    fail: 0
+    warn: 3
+    info: 1
+    pass: 10

@@ -1,0 +1,20 @@
+file: cardvar_mpci.rds
+file_size: 9778
+pin_hash: 13a524eec2ddc1f1
+type: rds
+title: Cards issued
+description: Card variance dataset mpci
+tags: ~
+urls: ~
+created: 20261018T170224Z
+api_version: 1
+user:
+  obj_hash: ecb1860bfa88601dabd23c27bb633dbc
+  sha256: 5917291fe69828e9be558141f52d596dff3948f89c53e8f6ab6c371f4c46fb04
+  last_month: '2026-08-01'
+  counts:
+    stop: 0
+    fail: 0
+    warn: 0
+    info: 1
+    pass: 11

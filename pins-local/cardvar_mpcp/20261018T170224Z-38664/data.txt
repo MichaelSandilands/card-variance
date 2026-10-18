@@ -1,0 +1,20 @@
+file: cardvar_mpcp.rds
+file_size: 75908
+pin_hash: 38664977837cc87a
+type: rds
+title: Card payments
+description: Card variance dataset mpcp
+tags: ~
+urls: ~
+created: 20261018T170224Z
+api_version: 1
+user:
+  obj_hash: 241a59b01f008e4481a9b2d21e7ddd83
+  sha256: 9453e22731877c1944f292727eca40c49480050a22cc93e7fa8a20741938fa0a
+  last_month: '2026-08-01'
+  counts:
+    stop: 0
+    fail: 0
+    warn: 2
+    info: 1
+    pass: 14

@@ -1,0 +1,10 @@
+file: cardvar_runlog.rds
+file_size: 262
+pin_hash: 55f5582a3c001f84
+type: rds
+title: Card variance run log
+description: ~
+tags: ~
+urls: ~
+created: 20261018T170226Z
+api_version: 1
