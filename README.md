@@ -47,9 +47,12 @@ Accommodation spike, and a missing February 2024 month for Leitrim
    It writes `pipeline_summary.md` and exits with status 2 if a dataset was blocked. A run with
    no new data writes only the run log. After the first one, check the points under
    *First live run* below.
-4. **Deploy the app.** Run `Rscript deploy/deploy_connect.R`. The script copies the variables
-   to the content's Vars panel on Connect, where they are stored encrypted, using the read-only
-   token when `.Renviron` has one.
+4. **Deploy the app.** On a Posit Connect server, run `Rscript deploy/deploy_connect.R`. The
+   script copies the variables to the content's Vars panel on Connect, where they are stored
+   encrypted, using the read-only token when `.Renviron` has one. On Posit Connect Cloud, run
+   `rsconnect::connectCloudUser()` once, then `Rscript deploy/deploy_connect_cloud.R`, and set the
+   variables in the content's settings (Connect Cloud does not take them from rsconnect; the
+   script lists them).
 
 The pipeline runs where the Bank's site accepts it. Its firewall (AWS WAF) answers cloud servers,
 GitHub's runners included, with a browser challenge that a script cannot pass, so a scheduled
@@ -181,7 +184,7 @@ config/schemas/       approved column lists
 config/annotations.csv known events
 tests/testthat/       unit tests (112)
 tests/fixtures/       synthetic releases and their generator
-deploy/               Posit Connect deployment
+deploy/               Posit Connect and Connect Cloud deployment
 renv/, renv.lock      renv setup and locked package versions
 .github/workflows/    tests
 .Renviron.example     the R2 variables the app and deploy script read
