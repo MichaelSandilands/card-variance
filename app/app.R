@@ -7,7 +7,9 @@
 library(shiny)
 library(bslib)
 
-board <- card_board()
+# pins contacts R2 as soon as the board is made, so bad credentials fail here; the
+# server shows the reason instead of the app failing to start.
+board <- tryCatch(card_board(), error = function(e) e)
 
 # IBM Plex is linked from Google Fonts in the viewer's browser (nothing downloads on the
 # server); where that is blocked, the system fonts below take over.
@@ -56,10 +58,14 @@ ui <- page_navbar(
 )
 
 server <- function(input, output, session) {
-  if (is.null(list_releases(board))) {
+  if (inherits(board, "error") || is.null(list_releases(board))) {
+    problem <- if (inherits(board, "error")) paste("Connecting to the board failed:", conditionMessage(board))
+               else board_error(board)
     showModal(modalDialog(
       title = "No release found",
-      "The board has no published release yet. Run the pipeline (Rscript run_pipeline.R) and reload.",
+      p(board_description()),
+      p(problem %||%
+          "The board has no published release yet. Publish one with CARDVAR_BOARD=r2 Rscript run_pipeline.R and reload."),
       footer = NULL, easyClose = FALSE
     ))
     return(invisible())

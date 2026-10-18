@@ -50,9 +50,9 @@ Accommodation spike, and a missing February 2024 month for Leitrim
 4. **Deploy the app.** On a Posit Connect server, run `Rscript deploy/deploy_connect.R`. The
    script copies the variables to the content's Vars panel on Connect, where they are stored
    encrypted, using the read-only token when `.Renviron` has one. On Posit Connect Cloud, run
-   `rsconnect::connectCloudUser()` once, then `Rscript deploy/deploy_connect_cloud.R`, and set the
-   variables in the content's settings (Connect Cloud does not take them from rsconnect; the
-   script lists them).
+   `rsconnect::connectCloudUser()` once, then `Rscript deploy/deploy_connect_cloud.R`. It sends the
+   same variables as the app's secrets; each deploy replaces them, so keep them in `.Renviron`
+   rather than editing them on the Connect Cloud page.
 
 The pipeline runs where the Bank's site accepts it. Its firewall (AWS WAF) answers cloud servers,
 GitHub's runners included, with a browser challenge that a script cannot pass, so a scheduled

@@ -7,7 +7,13 @@
 # CARDVAR_BOARD=local  A folder of pins (development). CARDVAR_LOCAL_BOARD
 #                      sets the folder; default "pins-local" at the project root.
 
-card_board <- function(mode = Sys.getenv("CARDVAR_BOARD", "local")) {
+# Forgiving of how a settings page may store it: "R2", " r2" and "\"r2\"" all mean r2.
+board_mode <- function() {
+  mode <- tolower(trimws(gsub("[\"']", "", Sys.getenv("CARDVAR_BOARD"))))
+  if (nzchar(mode)) mode else "local"
+}
+
+card_board <- function(mode = board_mode()) {
   if (identical(mode, "r2")) return(r2_board())
   pins::board_folder(local_board_path(), versioned = TRUE)
 }
@@ -26,7 +32,7 @@ r2_prefix <- function() {
 
 # Which board the pipeline writes to. A target depends on it, so switching board
 # (local to R2, say) re-uploads the raw files instead of skipping them as unchanged.
-board_identity <- function(mode = Sys.getenv("CARDVAR_BOARD", "local")) {
+board_identity <- function(mode = board_mode()) {
   if (identical(mode, "r2")) {
     return(paste("r2", Sys.getenv("R2_ACCOUNT_ID"), Sys.getenv("R2_BUCKET"), r2_prefix()))
   }
@@ -64,6 +70,27 @@ pin_names <- list(
   dataset = function(id) paste0("cardvar_", id),
   raw = function(id) paste0("cardvar_raw_", id)
 )
+
+# Where the app reads, in words, for the "No release found" message.
+board_description <- function(mode = board_mode()) {
+  if (identical(mode, "r2")) {
+    return(sprintf("Reading Cloudflare R2: bucket %s, prefix %s.", Sys.getenv("R2_BUCKET"), r2_prefix()))
+  }
+  raw <- Sys.getenv("CARDVAR_BOARD")
+  vars <- c("CARDVAR_BOARD", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET")
+  have <- vars[nzchar(Sys.getenv(vars))]
+  sprintf("Reading the local board %s because CARDVAR_BOARD is %s; set it to r2 to read Cloudflare R2. Variables this app can see: %s.",
+          local_board_path(), if (nzchar(raw)) paste0("\u201c", raw, "\u201d") else "not set",
+          if (length(have)) paste(have, collapse = ", ") else "none")
+}
+
+# The error behind an empty listing, if any (pin_exists_safe() treats errors as "no pin").
+board_error <- function(board) {
+  tryCatch({
+    pins::pin_exists(board, pin_names$release)
+    NULL
+  }, error = function(e) paste("Reading the board failed:", conditionMessage(e)))
+}
 
 pin_exists_safe <- function(board, name) {
   tryCatch(pins::pin_exists(board, name), error = function(e) FALSE)
