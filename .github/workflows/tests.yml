@@ -34,6 +34,11 @@ jobs:
           r-version: renv          # the R version recorded in renv.lock
           use-public-rspm: true    # binary packages
 
+      # Posit Package Manager first (binaries), then CRAN for versions it has not synced yet:
+      # renv.lock can pin a release from the last day or two.
+      - name: Fall back to CRAN
+        run: echo "RENV_CONFIG_REPOS_OVERRIDE=P3M=${RSPM};CRAN=https://cloud.r-project.org" >> "$GITHUB_ENV"
+
       - uses: r-lib/actions/setup-renv@v2
 
       - name: Lockfile matches DESCRIPTION
