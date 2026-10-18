@@ -74,18 +74,19 @@ total_label <- function(codes, d) {
 
 group_totals <- function(data, d, parent, children = NULL, dims) {
   keys <- c("date", "unit", setdiff(dims, d))
-  x <- data[!is.na(data$value) & !is.na(data$date), c(keys, d, "value")]
+  x <- data[!is.na(data$date), c(keys, d, "value")]
   names(x)[names(x) == d] <- ".dim"
   if (!is.null(children)) x <- x[x$.dim %in% c(parent, children), ]
   x |>
     dplyr::group_by(dplyr::across(dplyr::all_of(keys))) |>
     dplyr::summarise(
       total = sum(value[.dim == parent]),
-      n_total = sum(.dim == parent),
-      sum_of_parts = sum(value[.dim != parent]),
-      n_parts = sum(.dim != parent),
-      largest_part = if (any(.dim != parent)) max(value[.dim != parent]) else NA_real_,
-      largest_part_name = if (any(.dim != parent)) .dim[.dim != parent][which.max(value[.dim != parent])] else NA_character_,
+      n_total = sum(.dim == parent & !is.na(value)),
+      sum_of_parts = sum(value[.dim != parent], na.rm = TRUE),
+      n_parts = sum(.dim != parent & !is.na(value)),
+      blank_parts = sum(.dim != parent & is.na(value)),     # published blank (suppressed)
+      largest_part = if (n_parts > 0) max(value[.dim != parent], na.rm = TRUE) else NA_real_,
+      largest_part_name = if (n_parts > 0) .dim[.dim != parent][which.max(value[.dim != parent])] else NA_character_,
       .groups = "drop"
     ) |>
     dplyr::filter(n_total == 1, n_parts >= 1)
@@ -100,28 +101,34 @@ reconcile_dataset <- function(id, data, dims, codes, decimals, labels, config) {
     if (is.na(tot)) next
     g <- group_totals(data, d, tot, dims = dims)
     if (!nrow(g)) next
+    # A blank or missing part makes a sum fall short, so sums are learned and checked
+    # only where every part is published: none blank, and as many as the series ever has.
     g <- g |>
       dplyr::mutate(difference = total - sum_of_parts,
-                    tolerance = tol_unit * (n_parts + 1) + 1e-9 * abs(total))
-    hist <- g[g$date < max(g$date) & g$n_parts >= 2, ]
+                    tolerance = tol_unit * (n_parts + 1) + 1e-9 * abs(total)) |>
+      dplyr::mutate(complete = blank_parts == 0 & n_parts == max(n_parts),
+                    .by = dplyr::all_of(c("unit", setdiff(dims, d)))) |>
+      dplyr::select(-blank_parts)
+    summed <- g[g$complete & g$n_parts >= 2, ]
+    hist <- summed[summed$date < max(g$date), ]
     held <- if (nrow(hist) >= 3) mean(abs(hist$difference) <= hist$tolerance) else 0
     dl <- dim_label(d, labels)
     is_sum <- held >= share
     if (is_sum) {
-      fails <- g[g$n_parts >= 2 & abs(g$difference) > g$tolerance, ]
+      fails <- summed[abs(summed$difference) > summed$tolerance, ] |> dplyr::select(-complete)
       checks[[length(checks) + 1]] <- new_check(
         id, paste0("sum_", d), paste0(dl, ": \u201c", tot, "\u201d equals the sum of its parts"),
-        "Reconciliation", "fail", nrow(g[g$n_parts >= 2, ]), fails,
-        note = sprintf("Learned rule: held in %.0f%% of earlier months. Tolerance is the source rounding.", 100 * held),
+        "Reconciliation", "fail", nrow(summed), fails,
+        note = sprintf("Learned rule: held in %.0f%% of earlier months. Tolerance is the source rounding. Months with a blank part are skipped.", 100 * held),
         rule_source = "Learned from history"
       )
     }
-    over <- g[!is.na(g$largest_part) & g$largest_part > g$total + g$tolerance, ]
+    over <- g[!is.na(g$largest_part) & g$largest_part > g$total + g$tolerance, ] |> dplyr::select(-complete)
     checks[[length(checks) + 1]] <- new_check(
       id, paste0("subset_", d), paste0(dl, ": no part exceeds \u201c", tot, "\u201d"),
       "Reconciliation", if (is_sum) "fail" else "warn", nrow(g), over,
       note = if (is_sum) "Parts add up to the total, so none may exceed it."
-             else "Parts overlap (for example contactless within point of sale), so only containment is checked.",
+             else "Parts do not add up to the total (they overlap, as contactless sits within point of sale, or are incomplete), so only containment is checked.",
       rule_source = "Learned from history"
     )
   }
@@ -130,6 +137,7 @@ reconcile_dataset <- function(id, data, dims, codes, decimals, labels, config) {
     if (!r$dim %in% dims) next
     g <- group_totals(data, r$dim, r$parent, unlist(r$children), dims = dims) |>
       dplyr::filter(n_parts == length(r$children)) |>
+      dplyr::select(-blank_parts) |>
       dplyr::mutate(difference = total - sum_of_parts,
                     tolerance = tol_unit * (n_parts + 1) + 1e-9 * abs(total))
     fails <- if (identical(r$type, "subset")) g[g$largest_part > g$total + g$tolerance, ]
@@ -166,18 +174,23 @@ latest_movements <- function(id, variances, series, config, annotations) {
   new_check(
     id, "large_movement", paste0("Large movements in ", month_label(latest)),
     "Plausibility", "warn", sum(v$material), fails,
-    note = sprintf("MoM beyond %.0f%% or YoY beyond %.0f%%, for series above %.1f%% of the largest in their unit. %d explained by annotations.",
-                   100 * (th$mom_pct %||% 0.2), 100 * (th$yoy_pct %||% 0.3), 100 * mat,
+    note = sprintf("MoM beyond %.0f%% or YoY beyond %.0f%%, for series above %s%% of the largest in their unit. %d explained by annotations.",
+                   100 * (th$mom_pct %||% 0.2), 100 * (th$yoy_pct %||% 0.3), format(100 * mat),
                    nrow(fails) - nrow(unexplained)),
     status = if (nrow(unexplained)) "warn" else "pass"
   )
 }
 
-# STL remainder outside IQR fences, the method timetk::anomalize() uses.
+# STL remainder outside IQR fences (stl_fences(), which the Diagnostics tab also draws).
 latest_anomalies <- function(id, data, config, annotations) {
   k <- config$thresholds$anomaly_iqr_factor %||% 3
+  mat <- config$thresholds$materiality_share %||% 0.001
   latest <- max(data$date, na.rm = TRUE)
-  d <- data[!is.na(data$value) & !is.na(data$date), c("series_key", "date", "value")]
+  d <- data[!is.na(data$value) & !is.na(data$date), c("series_key", "unit", "date", "value")]
+  # Material series only, as for large movements.
+  now <- d[d$date == latest, ]
+  now <- now[abs(now$value) >= mat * stats::ave(abs(now$value), now$unit, FUN = max), ]
+  d <- d[d$series_key %in% now$series_key, ]
   d <- d[order(d$series_key, d$date), ]
   tested <- 0L
   rows <- lapply(split(d, d$series_key), function(s) {
@@ -185,19 +198,13 @@ latest_anomalies <- function(id, data, config, annotations) {
     if (n < 24 || s$date[n] != latest) return(NULL)
     if (n != length(seq(s$date[1], latest, by = "month"))) return(NULL)
     if (stats::sd(s$value) == 0) return(NULL)
-    fit <- tryCatch(stats::stl(stats::ts(s$value, frequency = 12), s.window = "periodic", robust = TRUE),
-                    error = function(e) NULL)
+    fit <- tryCatch(stl_fences(s$date, s$value, k), error = function(e) NULL)
     if (is.null(fit)) return(NULL)
     tested <<- tested + 1L
-    rem <- as.numeric(fit$time.series[, "remainder"])
-    q <- stats::quantile(rem, c(0.25, 0.75), names = FALSE)
-    iqr <- q[2] - q[1]
-    lo <- q[1] - k * iqr
-    hi <- q[2] + k * iqr
-    r <- rem[n]
-    if (iqr > 0 && (r < lo || r > hi)) {
+    last <- fit[n, ]
+    if (last$anomaly == "Yes") {
       tibble::tibble(series_key = s$series_key[1], date = latest, value = s$value[n],
-                     remainder = r, lower = lo, upper = hi)
+                     remainder = last$remainder, lower = last$remainder_l1, upper = last$remainder_l2)
     }
   })
   fails <- dplyr::bind_rows(rows)
@@ -206,7 +213,8 @@ latest_anomalies <- function(id, data, config, annotations) {
   new_check(
     id, "anomaly", paste0("Unusual values in ", month_label(latest)),
     "Plausibility", "warn", tested, fails,
-    note = sprintf("STL decomposition with IQR fences (k = %s), on series with 24+ unbroken months.", k),
+    note = sprintf("STL decomposition with IQR fences (k = %s), on series with 24+ unbroken months above %s%% of the largest in their unit.",
+                   k, format(100 * mat)),
     status = if (nrow(unexplained)) "warn" else "pass"
   )
 }
@@ -252,6 +260,7 @@ validate_dataset <- function(id, raw, profile, tidy, variances, revisions, schem
   data <- tidy$data
   dims <- profile$dims
   annotations <- read_annotations()
+  config$thresholds <- dataset_thresholds(config, id)
   checks <- list()
 
   sch_fail <- dplyr::bind_rows(
@@ -297,8 +306,17 @@ validate_dataset <- function(id, raw, profile, tidy, variances, revisions, schem
     miss <- want[!want %in% gaps$present[[i]]]
     if (length(miss)) tibble::tibble(series_key = gaps$series_key[i], missing_month = miss)
   }))
+  # A gap fails in a material series; tiny ones (a few transactions a month) often skip months.
+  mat <- config$thresholds$materiality_share %||% 0.001
+  peak <- ok[!is.na(ok$value), ] |>
+    dplyr::summarise(peak = max(abs(value)), .by = c(series_key, unit)) |>
+    dplyr::mutate(material = peak >= mat * max(peak), .by = unit)
+  if (nrow(gap_rows)) gap_rows$material <- peak$material[match(gap_rows$series_key, peak$series_key)] %in% TRUE
   checks$gaps <- new_check(id, "gaps", "No missing months inside a series", "Completeness", "fail",
-                           nrow(gaps), gap_rows)
+                           nrow(gaps), gap_rows,
+                           note = sprintf("Fails for series above %s%% of the largest in their unit; smaller series are for review.",
+                                          format(100 * mat)),
+                           status = if (!nrow(gap_rows)) "pass" else if (any(gap_rows$material)) "fail" else "warn")
 
   latest <- max(ok$date)
   stale <- gaps[gaps$last < latest, c("series_key", "last")]

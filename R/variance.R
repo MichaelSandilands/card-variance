@@ -58,26 +58,15 @@ calc_qoq <- function(df, keys = "series_key", measure_type = "flow") {
     finish_variance()
 }
 
+# January-to-month this year against the same months a year earlier: flows are
+# summed over those months, stocks averaged.
 calc_ytd <- function(df, keys = "series_key", measure_type = "flow") {
-  if (measure_type == "stock") {
-    # Change since the previous December.
-    dec <- df |>
-      dplyr::filter(lubridate::month(date) == 12) |>
-      dplyr::transmute(dplyr::across(dplyr::all_of(keys)),
-                       year = lubridate::year(date) + 1,
-                       comparison_date = date,
-                       comparison_value = value)
-    return(df |>
-      dplyr::mutate(year = lubridate::year(date)) |>
-      dplyr::left_join(dec, by = c(keys, "year")) |>
-      dplyr::select(-year) |>
-      finish_variance())
-  }
+  to_date <- if (measure_type == "stock") dplyr::cummean else cumsum
   df |>
     dplyr::arrange(date) |>
     dplyr::mutate(year = lubridate::year(date), m = lubridate::month(date)) |>
     dplyr::group_by(dplyr::across(dplyr::all_of(keys)), year) |>
-    dplyr::mutate(value = cumsum(value),
+    dplyr::mutate(value = to_date(value),
                   complete = m == dplyr::row_number()) |>   # no gap since January
     dplyr::ungroup() |>
     dplyr::mutate(value = dplyr::if_else(complete, value, NA_real_)) |>
@@ -114,7 +103,7 @@ variance_definitions <- function(measure_type = "flow") {
       else "Quarter-end month of a complete quarter compared with the previous quarter-end.",
       "Month compared with the same month a year earlier.",
       if (flow) "Cumulative January-to-month total compared with the same months a year earlier; only when every month since January is published in both years."
-      else "Month compared with December of the previous year."
+      else "Average of January to this month compared with the average of the same months a year earlier; only when every month since January is published in both years."
     )
   )
 }

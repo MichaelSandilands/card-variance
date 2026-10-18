@@ -55,13 +55,21 @@ test_that("flow YTD with a gap since January is incomplete", {
   expect_equal(y$status[y$date == as.Date("2026-01-01")], "ok")
 })
 
-test_that("stock YTD compares August 2026 with December 2025", {
-  dates <- monthly("2025-11-01", "2026-08-01")
-  d <- series_df(dates, seq(100, by = 5, length.out = length(dates)))
-  y <- calc_ytd(d, measure_type = "stock")
+test_that("stock YTD averages January to August 2026 against January to August 2025", {
+  dates <- monthly("2025-01-01", "2026-08-01")
+  vals <- seq(100, by = 5, length.out = length(dates))
+  y <- calc_ytd(series_df(dates, vals), measure_type = "stock")
   aug <- y[y$date == as.Date("2026-08-01"), ]
-  expect_equal(aug$comparison_date, as.Date("2025-12-01"))
-  expect_equal(aug$comparison_value, 105)
+  expect_equal(aug$comparison_date, as.Date("2025-08-01"))
+  expect_equal(aug$value, mean(vals[dates >= as.Date("2026-01-01")]))
+  expect_equal(aug$comparison_value, mean(vals[dates <= as.Date("2025-08-01")]))
+  expect_equal(aug$status, "ok")
+})
+
+test_that("stock YTD with an incomplete prior year has no comparison", {
+  dates <- monthly("2025-11-01", "2026-08-01")
+  y <- calc_ytd(series_df(dates, seq_along(dates)), measure_type = "stock")
+  expect_equal(y$status[y$date == as.Date("2026-08-01")], "no comparison")
 })
 
 test_that("zero base gives no percentage and a negative base keeps the sign", {
@@ -84,7 +92,7 @@ test_that("compute_variances returns all four types with readable labels", {
   dates <- monthly("2024-01-01", "2026-08-01")
   v <- compute_variances(series_df(dates, seq_along(dates)), "flow")
   expect_setequal(unique(v$variance_type), c("MoM", "QoQ", "YoY", "YTD"))
-  lab <- variance_labels(c("QoQ", "YTD", "MoM", "YoY"), as.Date(c("2026-04-01", "2026-08-01", "2026-08-01", "2026-08-01")), NA, "flow")
+  lab <- variance_labels(c("QoQ", "YTD", "MoM", "YoY"), as.Date(c("2026-04-01", "2026-08-01", "2026-08-01", "2026-08-01")), NA)
   expect_equal(lab$period, c("Q2 2026", "Jan\u2013Aug 2026", "Aug 2026", "Aug 2026"))
   expect_equal(lab$comparison, c("Q1 2026", "Jan\u2013Aug 2025", "Jul 2026", "Aug 2025"))
 })

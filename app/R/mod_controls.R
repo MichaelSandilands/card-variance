@@ -3,6 +3,8 @@
 # Returns a list of reactives that every tab reads, so plots and tables always
 # show the same selection.
 
+MONTH_STEP <- 365.25 / 12   # days; a 31-day step drifts and starts skipping months after ~4 years
+
 mod_controls_ui <- function(id) {
   ns <- shiny::NS(id)
   variance_label <- shiny::span(
@@ -13,7 +15,7 @@ mod_controls_ui <- function(id) {
         shiny::tags$dt("MoM"), shiny::tags$dd("Month against the month before."),
         shiny::tags$dt("QoQ"), shiny::tags$dd("Complete quarter against the quarter before. A quarter counts only when all three months are published."),
         shiny::tags$dt("YoY"), shiny::tags$dd("Month against the same month a year earlier."),
-        shiny::tags$dt("YTD"), shiny::tags$dd("January to this month against the same months a year earlier. Stocks compare with the previous December.")),
+        shiny::tags$dt("YTD"), shiny::tags$dd("January to this month against the same months a year earlier: summed for flows, averaged for stocks.")),
       placement = "right"
     )
   )
@@ -37,7 +39,7 @@ mod_controls_ui <- function(id) {
       shiny::uiOutput(ns("vtype_note")),
       shiny::sliderInput(ns("range"), "Period", min = as.Date("2022-01-01"), max = Sys.Date(),
                          value = c(as.Date("2022-01-01"), Sys.Date()), timeFormat = "%b %Y",
-                         step = 31, ticks = FALSE)
+                         step = MONTH_STEP, ticks = FALSE)
     )
   )
 }
@@ -164,10 +166,12 @@ mod_controls_server <- function(id, board) {
     })
 
     # The slider is static (a slider made in renderUI loses its date formatter in Shiny 1.8).
+    # Handles sit mid-month and step an average month, so no month is ever skipped.
     shiny::observe({
       d <- ds()
-      shiny::updateSliderInput(session, "range", min = d$info$first_month, max = d$info$last_month,
-                               value = c(d$info$first_month, d$info$last_month), timeFormat = "%b %Y")
+      ends <- c(d$info$first_month, d$info$last_month) + 14
+      shiny::updateSliderInput(session, "range", min = ends[1], max = ends[2], value = ends,
+                               timeFormat = "%b %Y")
     })
     range <- shiny::reactive({
       d <- ds()
@@ -191,7 +195,9 @@ mod_controls_server <- function(id, board) {
       shiny::div(class = "control-note", lapply(notes, shiny::p))
     })
 
-    list(release_version = release_version, release = release, ds = ds, unit = unit,
+    digits <- shiny::reactive(unit_digits(ds(), unit()))
+
+    list(release_version = release_version, release = release, ds = ds, unit = unit, digits = digits,
          filters = filters, series = series, range = range, vtype = vtype,
          dataset_id = shiny::reactive(input$dataset))
   })

@@ -1,0 +1,16 @@
+# Copy to .Renviron (git-ignored) and fill in. R reads it when it starts in the project root.
+#
+# The app and deploy/deploy_connect.R only read releases, so use the R2 token with
+# Object Read permission here. The pipeline's read-and-write token belongs in the
+# GitHub secrets (or the Connect Vars panel), not on your machine.
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET=
+
+# Optional
+# R2_PREFIX=card-variance/
+# R2_ENDPOINT=https://<account id>.r2.cloudflarestorage.com
+
+# Uncomment to run the app locally against R2 instead of the local pins-local/ board.
+# CARDVAR_BOARD=r2

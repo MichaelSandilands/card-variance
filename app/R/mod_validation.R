@@ -27,7 +27,7 @@ mod_validation_server <- function(id, state) {
       v <- if (identical(input$scope, "cross")) {
         x <- state$release()$cross_checks
         x[x$dataset %in% c("all", state$ds()$id), ]
-      } else state$ds()$validation
+      } else signoff_checks(state$ds(), state$release())
       v$status <- as.character(v$status)
       v[order(match(v$status, status_levels), v$category), ]
     })
@@ -80,7 +80,8 @@ mod_validation_server <- function(id, state) {
                     variance_type = "Variance", explanation = "Explained by", remainder = "STL remainder",
                     lower = "Lower fence", upper = "Upper fence", old = "Previous", new = "Now",
                     change = "Change", flag = "Flag", rows = "Rows", last = "Last month",
-                    atv = "Avg transaction value", atv_previous = "Previous ATV")
+                    atv = "Avg transaction value", atv_previous = "Previous ATV",
+                    material = "Material series")
           names(d) <- ifelse(names(d) %in% names(labs), unname(labs[names(d)]),
                              ifelse(names(d) %in% names(nice), unname(nice[names(d)]), names(d)))
           shiny::div(class = "detail-table",

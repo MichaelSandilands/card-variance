@@ -13,11 +13,9 @@ mod_diagnostics_ui <- function(id) {
       bslib::nav_panel("Seasonality", plotly::plotlyOutput(ns("seasonal"), height = "420px"),
         shiny::div(class = "chart-foot", "Is this month normal for its time of year? Each box is one calendar month across years.")),
       bslib::nav_panel("STL decomposition", plotly::plotlyOutput(ns("stl"), height = "560px"),
-        shiny::div(class = "chart-foot", "Is a change trend, season, or noise? Remainder is what trend and season do not explain.")),
+        shiny::div(class = "chart-foot", "Is a change trend, season, or noise? Remainder is what trend and season do not explain; the anomaly check fences it.")),
       bslib::nav_panel("Anomalies", plotly::plotlyOutput(ns("anom"), height = "380px"),
-        shiny::div(class = "chart-foot", "Months outside the expected band (STL remainder with IQR fences, alpha 0.05).")),
-      bslib::nav_panel("Why flagged", plotly::plotlyOutput(ns("decomp"), height = "560px"),
-        shiny::div(class = "chart-foot", "The decomposition behind each anomaly flag."))
+        shiny::uiOutput(ns("anom_foot")))
     )
   )
 }
@@ -71,25 +69,27 @@ mod_diagnostics_server <- function(id, state) {
       timetk::plot_seasonal_diagnostics(ts_data(), date, value, .feature_set = c("month.lbl", "quarter"),
                                         .interactive = TRUE, .title = NULL) |> style()
     })
-    output$stl <- plotly::renderPlotly({
-      shiny::validate(shiny::need(long_enough(), "Needs 24 or more unbroken months."))
-      timetk::plot_stl_diagnostics(ts_data(), date, value, .frequency = 12, .trend = "auto",
-                                   .feature_set = c("observed", "season", "trend", "remainder"),
-                                   .interactive = TRUE, .title = NULL, .line_color = SERIES_COLOURS[1]) |> style()
-    })
+    # The same fit and fences as the Validation tab's anomaly check.
+    iqr_factor <- shiny::reactive(ds_thresholds(state$ds(), state$release())$anomaly_iqr_factor %||% 3)
     anomalies <- shiny::reactive({
       shiny::req(long_enough())
-      timetk::anomalize(ts_data(), date, value, .frequency = 12, .iqr_alpha = 0.05, .message = FALSE)
+      o <- ts_data()
+      stl_fences(o$date, o$value, iqr_factor())
+    })
+    output$stl <- plotly::renderPlotly({
+      shiny::validate(shiny::need(long_enough(), "Needs 24 or more unbroken months."))
+      timetk::plot_anomalies_decomp(anomalies(), date, .interactive = TRUE, .title = NULL,
+                                    .line_color = SERIES_COLOURS[1]) |> style()
+    })
+    output$anom_foot <- shiny::renderUI({
+      shiny::div(class = "chart-foot", sprintf(
+        "Months outside the expected band: STL remainder beyond %s \u00d7 IQR, the rule the Validation tab's anomaly check applies to the latest month.",
+        iqr_factor()))
     })
     output$anom <- plotly::renderPlotly({
       shiny::validate(shiny::need(long_enough(), "Needs 24 or more unbroken months."))
       timetk::plot_anomalies(anomalies(), date, .interactive = TRUE, .title = NULL,
                              .line_color = SERIES_COLOURS[1], .anom_color = STATUS_COLOURS[["fail"]]) |> style()
-    })
-    output$decomp <- plotly::renderPlotly({
-      shiny::validate(shiny::need(long_enough(), "Needs 24 or more unbroken months."))
-      timetk::plot_anomalies_decomp(anomalies(), date, .interactive = TRUE, .title = NULL,
-                                    .line_color = SERIES_COLOURS[1]) |> style()
     })
   })
 }

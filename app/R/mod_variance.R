@@ -21,7 +21,7 @@ mod_variance_server <- function(id, state) {
     rows <- shiny::reactive({
       v <- variance_rows(state$ds(), state$series(), state$vtype(), state$range())
       if (!nrow(v)) return(v)
-      th <- state$release()$thresholds
+      th <- ds_thresholds(state$ds(), state$release())
       limit <- switch(state$vtype(), MoM = th$mom_pct %||% 0.2, YoY = th$yoy_pct %||% 0.3, Inf)
       v$attention <- v$status != "ok" | (!is.na(v$pct_change) & abs(v$pct_change) > limit)
       if (isTRUE(input$latest)) v <- v[v$date == max(v$date), ]
@@ -40,7 +40,7 @@ mod_variance_server <- function(id, state) {
       shiny::validate(shiny::need(nrow(v) > 0, "No rows for this selection."))
       t <- v[, c("series", "series_key", "period", "compared_with", "value", "comparison_value",
                  "abs_change", "pct_change", "status", "attention")]
-      num <- reactable::colFormat(separators = TRUE, digits = 2)
+      num <- reactable::colFormat(separators = TRUE, digits = state$digits())
       reactable::reactable(
         t, searchable = TRUE, striped = FALSE, highlight = TRUE, compact = TRUE,
         defaultPageSize = 25, showPageSizeOptions = TRUE, pageSizeOptions = c(25, 50, 100),

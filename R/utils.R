@@ -8,6 +8,11 @@ read_config <- function(path = "config/datasets.yml") {
   cfg
 }
 
+# Global thresholds with any set for one dataset (datasets.<id>.thresholds) on top.
+dataset_thresholds <- function(config, id) {
+  utils::modifyList(config$thresholds %||% list(), config$datasets[[id]]$thresholds %||% list())
+}
+
 # "fixtures" reads the synthetic files in tests/fixtures; "live" calls the Central Bank.
 cardvar_source <- function() Sys.getenv("CARDVAR_SOURCE", "live")
 
@@ -25,6 +30,7 @@ source_decimals <- function(x) {
   if (!length(x)) return(0L)
   parts <- regmatches(x, regexpr("\\.[0-9]+$", x))
   if (!length(parts)) return(0L)
+  parts <- sub("0+$", "", parts)    # the Bank pads to 8 places: "9716214479.63000000" is to the cent
   min(max(nchar(parts) - 1L), 6L)
 }
 

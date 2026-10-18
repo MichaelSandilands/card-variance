@@ -37,15 +37,18 @@ Accommodation spike, and a missing February 2024 month for Leitrim
 1. **R2 bucket.** Create a bucket, then two API tokens under *R2 > Manage R2 API tokens*:
    *Object Read & Write* for the pipeline and *Object Read* for the app.
 2. **Pipeline secrets.** In the GitHub repository, add the secrets `R2_ACCOUNT_ID`,
-   `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` and `R2_BUCKET` (read-write token). Optionally add the
-   variable `R2_PREFIX` (default `card-variance/`). `.github/workflows/refresh.yml`
-   then runs every Monday at 06:00 UTC, and you can also start it by hand.
+   `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` and `R2_BUCKET` (read-write token) under *Settings >
+   Secrets and variables > Actions*. Optionally add the variable `R2_PREFIX` on the *Variables* tab
+   (default `card-variance/`). `.github/workflows/refresh.yml` then runs every Monday at 06:00 UTC,
+   and you can also start it by hand from the *Actions* tab. Each run starts clean and compares
+   with what is already in R2, so a week with no new data writes only the run log. GitHub turns
+   off scheduled workflows in public repositories after 60 days without a commit; if that happens,
+   re-enable it on the *Actions* tab.
 3. **First live run.** Run the workflow once by hand and check the points under
    *First live run* below.
 4. **Deploy the app.** Set the read-only token in `.Renviron` (see `.Renviron.example`),
    then run `Rscript deploy/deploy_connect.R`. The script copies the variables to the
    content's Vars panel on Connect, where they are stored encrypted.
-5. **Lockfile.** Create it once, before the first deploy (see *Package versions with renv*).
 
 To schedule on Posit Connect instead of GitHub, deploy `refresh_connect.Rmd` (instructions inside)
 and give it a weekly schedule.
@@ -55,19 +58,10 @@ refuses some automated clients, so confirm the download works from wherever the 
 
 ## Package versions with renv
 
-The project is set up for renv (`.Rprofile`, `renv/activate.R`, `renv/settings.json`) but has no
-lockfile yet, because it was built where CRAN was unreachable. Create it on your machine, from the project root:
+The project uses renv (`.Rprofile`, `renv/activate.R`, `renv/settings.json`) and `renv.lock` is committed.
+`renv::restore()` installs exactly the locked versions.
 
-```r
-renv::install()    # every package in DESCRIPTION, including Suggests (tests, rsconnect, rmarkdown)
-renv::snapshot()   # writes renv.lock
-```
-
-Commit `renv.lock`. From then on:
-
-- **CI** (`tests.yml`, `refresh.yml`) installs exactly the locked versions and R version.
-  Until the lockfile exists, both workflows switch renv off and install the latest versions,
-  with a warning in the run.
+- **CI** (`tests.yml`) installs exactly the locked versions and R version.
 - **Posit Connect.** `deploy/deploy_connect.R` runs inside the renv project, so the app is bundled with the
   locked versions. The optional `refresh_connect.Rmd` deploy carries `renv.lock` itself.
 - **Changing packages.** Edit `DESCRIPTION`, run `renv::install()` and `renv::snapshot()`, and commit both.
@@ -93,11 +87,11 @@ on the first real run. The app's *About* tab shows every column with the role it
 - [ ] **Reconciliation.** The pipeline learns which totals equal the sum of their parts from past
       months (see below). Review the learned rules on the *Validation* tab. Add explicit rules
       or cross-file checks under `rules:` and `cross_checks:` where you know the identity.
-- [ ] **Counties.** The boundary file (Tailte Éireann, CC BY 4.0) is downloaded once to
-      `data/ref/counties.geojson`. The *Every county in the data has a boundary* check confirms
+- [ ] **Counties.** The boundary file (Tailte Éireann, CC BY 4.0) is downloaded to
+      `data/ref/counties.geojson` (on every GitHub run, since each starts clean). The *Every county in the data has a boundary* check confirms
       the names match.
 - [ ] **Population (optional).** For the map's *per 1,000 residents* view, add
-      `data/ref/county_population.csv` with columns `county,population`, using the CSO Census 2022
+      `config/county_population.csv` with columns `county,population`, using the CSO Census 2022
       figures (PxStat table FP001 or the Census 2022 Main Results).
 
 ## How a weekly run works
@@ -123,7 +117,7 @@ on the first real run. The app's *About* tab shows every column with the role it
 | MoM | Month vs previous month | Same | Both months published |
 | QoQ | Sum of 3 months vs previous quarter | Quarter-end month | Both quarters have all 3 months |
 | YoY | Month vs same month a year earlier | Same | Both months published |
-| YTD | Jan–month total vs same months a year earlier | Month vs previous December | Every month since January published in both years |
+| YTD | Jan–month total vs same months a year earlier | Jan–month average vs same months a year earlier | Every month since January published in both years |
 
 Comparisons join on dates, so a gap yields "no comparison" rather than a wrong pair.
 Percent change is `(current − comparison) / |comparison|`; a zero base gives no percentage.
@@ -135,37 +129,40 @@ With data from March 2022, Q1 2022 is excluded and the first valid YTD compariso
 | --- | --- | --- |
 | Structure | Columns match the approved list; periods parse; values are numbers; one row per series and month | Stop |
 | Structure | Frequency is monthly | Fail |
-| Completeness | No missing months inside a series | Fail |
+| Completeness | No missing months inside a series | Fail (Review for series below the materiality share) |
 | Completeness | Blank observations; series that stop early | Review |
-| Reconciliation | A total equals the sum of its parts (learned: held in ≥ 95% of earlier months) | Fail |
+| Reconciliation | A total equals the sum of its parts (learned: held in ≥ 95% of earlier months; months with a blank part are skipped) | Fail |
 | Reconciliation | No part exceeds its total (where parts overlap, such as contactless inside point of sale) | Review |
 | Reconciliation | Rules and cross-file checks you add in `config/datasets.yml` | As configured |
 | Plausibility | No negative values | Fail |
 | Plausibility | Latest MoM beyond 20% or YoY beyond 30% (material series only) | Review |
-| Plausibility | Latest month outside STL/IQR fences (the `timetk::anomalize()` method) | Review |
+| Plausibility | Latest month outside STL/IQR fences (material series only; the same fit the *Diagnostics* tab draws) | Review |
 | Plausibility | Average transaction value moved more than 15% | Review |
 | Revisions | Published values removed since the previous release | Fail |
 | Revisions | Earlier values revised; more than one new month | Review |
 | Cross-file | All files end in the same month; county names match boundaries | Review / Fail |
 
 Tolerance for sums is half the smallest published unit for each value involved. Thresholds are in
-`config/datasets.yml`. A known event can be recorded in `config/annotations.csv`
+`config/datasets.yml`, globally or for one file under `datasets.<id>.thresholds`: the merchant category
+file, with 363 categories, reviews only series above 1% of the largest in their unit. A known event can be recorded in `config/annotations.csv`
 (`dataset,month,series_pattern,note`). It then marks matching movement or anomaly flags as explained and appears
 on the trend chart.
 
 ## The app
 
 - **Release header.** On every tab: the dataset and month, when it was published and checked, and
-  the check result in words ("2 checks failed and 2 need review before sign-off").
+  the check result in words ("2 checks failed and 2 need review before sign-off"), counting the
+  cross-file checks that cover the dataset.
 - **Sidebar.** Grouped into Dataset, Filters and Comparison: file, release (any earlier release can be
   reopened), measure, filters that cascade, variance type and period.
 - **About.** Source and licence, lineage (SHA-256, raw version, retrieval time), caveats,
   definitions, and every column with the reason it is shown or hidden.
 - **Trend.** A headline line (latest value, MoM, QoQ, YoY, YTD, each with its comparison period), then
   level lines with the chosen variance beneath on one x-axis. Excluded partial quarters are listed.
+  With YTD chosen, a chart of each year's January-to-month figure shows this year against earlier years.
   Charts and tables expand to full screen.
 - **Variance table.** Both source values beside every change, filterable to rows needing attention.
-- **Diagnostics.** timetk time series, seasonality, STL decomposition, anomalies and their decomposition.
+- **Diagnostics.** timetk time series, seasonality, STL decomposition and anomalies.
 - **Map** (county file). Choropleth of value, per 1,000 residents, share, or % change, with a sorted table.
 - **Validation** and **Revisions.** Each check expands to the rows behind it.
 - **Downloads** on every tab: CSV, or Excel with a metadata sheet recording the source, hash, release, filters and definition.
@@ -180,11 +177,12 @@ app/                  Shiny app (deploy this folder); app/R/shared.R and storage
 config/datasets.yml   datasets, labels, thresholds, optional rules
 config/schemas/       approved column lists
 config/annotations.csv known events
-tests/testthat/       unit tests (81)
+tests/testthat/       unit tests (112)
 tests/fixtures/       synthetic releases and their generator
 deploy/               Posit Connect deployment
-renv/, .Rprofile      renv setup (renv.lock is created on your machine)
+renv/, renv.lock      renv setup and locked package versions
 .github/workflows/    weekly refresh and tests
+.Renviron.example     the R2 variables the app and deploy script read
 ```
 
 ## Tests

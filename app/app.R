@@ -35,10 +35,11 @@ ui <- page_navbar(
   window_title = "Card payments variance",
   theme = app_theme,
   fillable = FALSE,
-  bg = "#ffffff",
+  navbar_options = navbar_options(bg = "#ffffff"),
   sidebar = sidebar(width = 300, mod_controls_ui("controls")),
   header = tagList(
-    tags$head(tags$link(rel = "stylesheet", href = "app.css")),
+    tags$head(tags$link(rel = "stylesheet", href = "app.css"),
+              tags$link(rel = "icon", type = "image/svg+xml", href = "favicon.svg")),
     uiOutput("release_header")
   ),
   nav_panel("About", value = "about", mod_about_ui("about")),
@@ -71,7 +72,7 @@ server <- function(input, output, session) {
     rel <- state$release()
     ds <- state$ds()
     log <- read_runlog(board)
-    status <- as.character(ds$validation$status)
+    status <- as.character(signoff_checks(ds, rel)$status)
     checked <- if (!is.null(log) && nrow(log)) log$checked_at[1] else rel$created
     when <- function(x) format(as.POSIXct(x, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"), "%d %b %Y, %H:%M UTC")
     worst <- intersect(c("stop", "fail", "warn"), status)[1]

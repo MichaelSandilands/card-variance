@@ -1,0 +1,55 @@
+# Unit tests, then the pipeline twice on the synthetic fixtures (the second run finds revisions).
+# No network or credentials needed: fixtures in, a throwaway local board out.
+
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CARDVAR_SOURCE: fixtures
+      CARDVAR_BOARD: local
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System libraries (sf, terra, units, curl, openssl, xml2)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev libudunits2-dev libsqlite3-dev \
+            libcurl4-openssl-dev libssl-dev libxml2-dev
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: renv          # the R version recorded in renv.lock
+          use-public-rspm: true    # binary packages
+
+      - uses: r-lib/actions/setup-renv@v2
+
+      - name: Lockfile matches DESCRIPTION
+        run: Rscript -e 'if (!isTRUE(renv::status()$synchronized)) quit(status = 1)'
+
+      - name: Unit tests
+        run: Rscript -e 'testthat::test_dir("tests/testthat", stop_on_failure = TRUE)'
+
+      - name: Pipeline, July fixtures (first release)
+        env:
+          CARDVAR_FIXTURE_DIR: tests/fixtures/release_2026-07
+        run: Rscript run_pipeline.R
+
+      - name: Pipeline, August fixtures (revisions appear)
+        env:
+          CARDVAR_FIXTURE_DIR: tests/fixtures/release_2026-08
+        run: Rscript run_pipeline.R
+
+      - name: Run summary
+        if: always()
+        run: if [ -f pipeline_summary.md ]; then cat pipeline_summary.md >> "$GITHUB_STEP_SUMMARY"; fi

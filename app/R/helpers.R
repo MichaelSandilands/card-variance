@@ -6,6 +6,7 @@ SERIES_COLOURS <- c("#2a78d6", "#eb6834", "#1baf7a", "#eda100",
                     "#e87ba4", "#008300", "#6250d6", "#e34948")
 MAX_SERIES <- length(SERIES_COLOURS)
 SEQ_RAMP <- c("#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b")
+YEAR_COLOURS <- SEQ_RAMP[3:7]    # ordinal, oldest to latest; the lightest steps fail 2:1 on white
 DIV_RAMP <- c("#9e2b2b", "#e34948", "#f0efec", "#3987e5", "#1c5cab")   # fall <- 0 -> rise
 STATUS_COLOURS <- c(stop = "#d03b3b", fail = "#d03b3b", warn = "#fab219",
                     info = "#8a8986", pass = "#0ca30c")
@@ -54,9 +55,38 @@ fmt_pct <- function(x, digits = 1) {
   ifelse(is.na(x), "\u2013", paste0(formatC(100 * x, format = "f", digits = digits, flag = "+"), "%"))
 }
 
+# The unit, with the UNITS multiplier when there is one ("Euro, millions"). The
+# Bank's files say "Exact Amount" for every unit, which only means unscaled.
 unit_title <- function(ds, unit) {
-  note <- ds$info$unit_notes[unit]
-  if (length(note) && !is.na(note) && nzchar(note)) unname(note) else unit
+  note <- unname(ds$info$unit_notes[unit])
+  if (!length(note) || is.na(note) || !grepl("thousand|million|billion", note, ignore.case = TRUE)) {
+    return(unit)
+  }
+  if (grepl(tolower(unit), tolower(note), fixed = TRUE)) note else paste0(unit, ", ", tolower(note))
+}
+
+# Decimal places for a unit: none when every value is whole (counts), two otherwise.
+unit_digits <- function(ds, unit) {
+  v <- ds$obs$value[ds$obs$series_key %in% ds$series$series_key[ds$series$unit == unit]]
+  if (all(v == round(v), na.rm = TRUE)) 0L else 2L
+}
+
+# Thresholds for this dataset: the release's, with the dataset's own overrides.
+ds_thresholds <- function(ds, rel) ds$info$thresholds %||% rel$thresholds
+
+# The checks behind a dataset's sign-off: its own and the cross-file checks covering it.
+signoff_checks <- function(ds, rel) {
+  x <- rel$cross_checks
+  if (is.null(x)) return(ds$validation)
+  dplyr::bind_rows(ds$validation, x[x$dataset %in% c("all", ds$id), ])
+}
+
+# Releases published before 18 Oct 2026 compared a stock's YTD with the previous
+# December; reopened, they keep the labels that match their numbers.
+ytd_since_december <- function(ds) {
+  if (!identical(ds$info$measure_type, "stock")) return(FALSE)
+  y <- ds$variances[ds$variances$variance_type == "YTD" & !is.na(ds$variances$comparison_date), ]
+  any(lubridate::month(y$comparison_date) != lubridate::month(y$date))
 }
 
 status_chip <- function(status, n = NULL) {
@@ -108,7 +138,7 @@ variance_rows <- function(ds, series, vtype, range = NULL) {
                       ds$variances$variance_type == vtype, ]
   if (!is.null(range)) v <- v[v$date >= range[1] & v$date <= range[2], ]
   if (!nrow(v)) return(v)
-  lab <- variance_labels(v$variance_type, v$date, v$comparison_date, ds$info$measure_type)
+  lab <- variance_labels(v$variance_type, v$date, v$comparison_date, ytd_since_december(ds))
   v$period <- lab$period
   v$compared_with <- lab$comparison
   v$series <- series_full_names(series, ds$series, ds$dims)[match(v$series_key, series$series_key)]
@@ -200,7 +230,7 @@ headline_figures <- function(ds, key) {
       x <- v[v$variance_type == t, ]
       if (!nrow(x)) return(list(type = t, pct = NA, abs = NA))
       x <- x[which.max(x$date), ]
-      lab <- variance_labels(t, x$date, x$comparison_date, ds$info$measure_type)
+      lab <- variance_labels(t, x$date, x$comparison_date, ytd_since_december(ds))
       list(type = t, pct = x$pct_change, abs = x$abs_change,
            period = lab$period, comparison = lab$comparison)
     })

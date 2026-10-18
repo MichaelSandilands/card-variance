@@ -92,7 +92,7 @@ test_that("an unusual latest month is flagged and an annotation explains it", {
   set.seed(1)
   vals <- 100 * (1 + 0.1 * sin(seq_along(dates) * 2 * pi / 12)) + stats::rnorm(length(dates), 0, 1)
   vals[length(vals)] <- vals[length(vals)] * 1.6
-  d <- series_df(dates, vals, "ACC")
+  d <- series_df(dates, vals, "ACC") |> mutate(unit = "Euro")
   none <- tibble::tibble(dataset = character(), month = character(), series_pattern = character(), note = character())
   a <- latest_anomalies("t", d, test_config(), none)
   expect_equal(a$status, "warn")
@@ -100,4 +100,83 @@ test_that("an unusual latest month is flagged and an annotation explains it", {
   b <- latest_anomalies("t", d, test_config(), note)
   expect_equal(b$status, "pass")
   expect_equal(b$details[[1]]$explanation, "Festival")
+})
+
+test_that("counties that sum to the total are learned even when some months have a blank county", {
+  cfg <- test_config()
+  months <- monthly("2024-01-01", "2026-08-01")
+  parts <- expand.grid(date = months, COUNTY = c("Cork", "Dublin", "Leitrim"), stringsAsFactors = FALSE)
+  parts$value <- c(Cork = 300, Dublin = 900, Leitrim = 20)[parts$COUNTY]
+  total <- parts |> group_by(date) |> summarise(value = sum(value), .groups = "drop") |> mutate(COUNTY = "All")
+  d <- bind_rows(parts, total) |> mutate(unit = "Euro")
+  blank <- d$COUNTY == "Leitrim" & d$date < as.Date("2024-09-01")   # suppressed for 8 of 32 months
+  d$value[blank] <- NA
+  always <- d |> mutate(unit = "Pure number", value = ifelse(COUNTY == "Leitrim", NA, value))  # blank every month
+  d <- bind_rows(d, always)
+  codes <- tibble::tibble(dim = "COUNTY", code = c("_T", "CO", "DU", "LM"),
+                          label = c("All", "Cork", "Dublin", "Leitrim"))
+  ok <- reconcile_dataset("t", d, "COUNTY", codes, 2, cfg$labels, cfg)
+  s <- ok[ok$check == "sum_COUNTY", ]
+  expect_equal(s$status, "pass")
+  expect_equal(s$n_tested, sum(months >= as.Date("2024-09-01")))   # blank months skipped
+  d$value[d$COUNTY == "All" & d$unit == "Euro" & d$date == as.Date("2026-03-01")] <- 1300
+  bad <- reconcile_dataset("t", d, "COUNTY", codes, 2, cfg$labels, cfg)
+  b <- bad[bad$check == "sum_COUNTY", ]
+  expect_equal(b$status, "fail")
+  expect_equal(b$details[[1]]$date, as.Date("2026-03-01"))
+  expect_false("complete" %in% names(b$details[[1]]))
+})
+
+test_that("the Diagnostics fit flags the same latest month as the anomaly check", {
+  dates <- monthly("2022-03-01", "2026-08-01")
+  set.seed(1)
+  vals <- 100 * (1 + 0.1 * sin(seq_along(dates) * 2 * pi / 12)) + stats::rnorm(length(dates), 0, 1)
+  vals[length(vals)] <- vals[length(vals)] * 1.6
+  fit <- stl_fences(dates, vals, 3)
+  expect_true(all(c("observed", "season", "trend", "remainder", "recomposed_l1", "recomposed_l2", "anomaly") %in% names(fit)))
+  expect_equal(fit$anomaly[nrow(fit)], "Yes")
+  flat <- stl_fences(dates, rep(5, length(dates)), 3)
+  expect_true(all(flat$anomaly == "No"))
+})
+
+test_that("a gap fails in a material series and is for review in a tiny one", {
+  dates <- monthly("2025-01-01", "2026-08-01")
+  big <- series_df(dates, rep(1e6, length(dates)), "BIG")
+  tiny <- series_df(dates[dates != as.Date("2026-02-01")], rep(5, length(dates) - 1), "TINY")
+  run <- function(d) {
+    raw <- tibble::tibble(REPORTINGPERIOD = format(d$date, "%Y-%m-%d"), SERIES_KEY = d$series_key,
+                          OBSERVATION = as.character(d$value), FREQ = "M", FREQ_DESC = "Monthly")
+    prof <- profile_dataset(raw)
+    tidy <- tidy_dataset(raw, prof)
+    schema <- list(status = "pass", observed = names(raw), missing = character(), extra = character(), message = "")
+    v <- validate_dataset("t", raw, prof, tidy, compute_variances(tidy$data, "flow"),
+                          compare_releases(tidy, NULL), schema, test_config())
+    v[v$check == "gaps", ]
+  }
+  g <- run(bind_rows(big, tiny))
+  expect_equal(as.character(g$status), "warn")
+  expect_false(g$details[[1]]$material)
+  bigger_gap <- bind_rows(big[big$date != as.Date("2026-02-01"), ], tiny)
+  expect_equal(as.character(run(bigger_gap)$status), "fail")
+})
+
+test_that("a dataset can override a threshold", {
+  cfg <- test_config()
+  cfg$datasets <- list(mpmc = list(thresholds = list(materiality_share = 0.01)))
+  expect_equal(dataset_thresholds(cfg, "mpmc")$materiality_share, 0.01)
+  expect_equal(dataset_thresholds(cfg, "mpmc")$mom_pct, 0.2)
+  expect_equal(dataset_thresholds(cfg, "mpcp")$materiality_share, 0.001)
+})
+
+test_that("the anomaly check skips immaterial series", {
+  dates <- monthly("2022-03-01", "2026-08-01")
+  set.seed(1)
+  wave <- 1 + 0.1 * sin(seq_along(dates) * 2 * pi / 12) + stats::rnorm(length(dates), 0, 0.01)
+  spike <- wave
+  spike[length(spike)] <- spike[length(spike)] * 1.6
+  d <- bind_rows(series_df(dates, 1e6 * wave, "BIG"), series_df(dates, 10 * spike, "TINY")) |> mutate(unit = "Euro")
+  none <- tibble::tibble(dataset = character(), month = character(), series_pattern = character(), note = character())
+  a <- latest_anomalies("t", d, test_config(), none)
+  expect_equal(a$n_tested, 1L)
+  expect_equal(a$status, "pass")
 })

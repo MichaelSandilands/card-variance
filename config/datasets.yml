@@ -22,7 +22,7 @@ boundaries:
 population:
   # Optional. Columns: county, population. Enables "per 1,000 residents" on the map.
   # Source to use: CSO Census 2022 county populations (PxStat table FP001 or the Main Results).
-  file: data/ref/county_population.csv
+  file: config/county_population.csv   # tracked, so the GitHub and Connect refreshes see it
 
 thresholds:
   mom_pct: 0.20          # latest MoM move larger than this is flagged for review
@@ -37,7 +37,7 @@ datasets:
     title: Cards issued
     resource_id: 09fb7335-f89f-4c47-89be-5e4156a61a37
     file: mpci_data.csv
-    measure_type: stock      # period-end value: QoQ uses the quarter-end month, YTD compares with December
+    measure_type: stock      # period-end value: QoQ uses the quarter-end month, YTD averages the months
     caveats:
       - Personal cards issued to Irish residents only; business cards are excluded.
   mpcp:
@@ -65,6 +65,8 @@ datasets:
     resource_id: 6ecf9975-8bc9-4872-a62c-7916a7f8988f
     file: mpmc_cardpaymentsbymerchantcategory.csv
     measure_type: flow
+    thresholds:              # overrides the global thresholds above for this file only
+      materiality_share: 0.01  # 363 categories: review those above 1% of the largest in their unit
     caveats:
       - Sectors and sub-sectors are derived by the Central Bank from merchant category codes.
       - Financial Services spending is falling as payments move to Open Banking and account-to-account transfers.
@@ -91,7 +93,7 @@ labels:
   FREQ: Frequency
   COUNTY: County
   SECTOR: Sector
-  MRCHNT_CTGRY: Merchant category
+  MRCHNT_CTGRY_CD: Merchant category
   CONFIDENTIALITY_FLAG: Confidentiality
 
 # Explicit reconciliation rules, on top of the rules learned from history.

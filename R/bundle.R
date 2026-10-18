@@ -22,7 +22,7 @@ assemble_dataset <- function(id, config, meta, snapshot, schema, profile, tidy,
       sha256 = snapshot$sha256, raw_pin = snapshot$pin, raw_version = snapshot$version,
       retrieved_at = snapshot$retrieved_at, rows = nrow(data), n_series = nrow(series),
       first_month = min(obs$date), last_month = max(obs$date), decimals = tidy$decimals,
-      unit_notes = tidy$unit_notes,
+      unit_notes = tidy$unit_notes, thresholds = dataset_thresholds(config, id),
       constants = profile$constants, columns = profile$columns
     ),
     roles = profile$roles,
@@ -61,7 +61,10 @@ publish_release <- function(results, cross_checks, geo, population, meta, config
                             note = "A stop-level check failed, so the previous release was kept.")
       next
     }
-    obj_hash <- digest::digest(r[c("series", "obs", "variances", "validation", "revisions", "roles")])
+    # Everything the app shows (caveats, titles and definitions too), but not the fetch time.
+    hashed <- r
+    hashed$info$retrieved_at <- NULL
+    obj_hash <- digest::digest(hashed)
     old_hash <- if (exists) tryCatch(pins::pin_meta(board, name)$user$obj_hash, error = function(e) NULL)
     if (!identical(old_hash, obj_hash)) {
       pins::pin_write(

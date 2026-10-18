@@ -1,0 +1,57 @@
+# Weekly refresh: download the Bank's files, validate, and publish a release to R2.
+#
+# Needs repository secrets R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY and R2_BUCKET
+# (an R2 token with Object Read & Write) and, optionally, the repository variable R2_PREFIX.
+# Each run starts clean: the pipeline compares with what is already in R2, so nothing needs
+# to carry over between runs. A blocked dataset fails the run, and GitHub emails you.
+
+name: refresh
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"     # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A manual run and the scheduled one never write to R2 at the same time.
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CARDVAR_SOURCE: live
+      CARDVAR_BOARD: r2
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ secrets.R2_BUCKET }}
+      # An unset variable would arrive as "", which would put the pins at the bucket root.
+      R2_PREFIX: ${{ vars.R2_PREFIX || 'card-variance/' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System libraries (sf, terra, units, curl, openssl, xml2)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgdal-dev libgeos-dev libproj-dev libudunits2-dev libsqlite3-dev \
+            libcurl4-openssl-dev libssl-dev libxml2-dev
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: renv          # the R version recorded in renv.lock
+          use-public-rspm: true    # binary packages
+
+      - uses: r-lib/actions/setup-renv@v2
+
+      - name: Refresh and publish
+        run: Rscript run_pipeline.R
+
+      - name: Run summary
+        if: always()
+        run: if [ -f pipeline_summary.md ]; then cat pipeline_summary.md >> "$GITHUB_STEP_SUMMARY"; fi

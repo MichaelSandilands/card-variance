@@ -28,3 +28,28 @@ test_that("the R2 board refuses to start without credentials", {
 test_that("percent formatting shows a sign and a dash for missing", {
   expect_equal(fmt_pct(c(0.0321, -0.5, NA)), c("+3.2%", "-50.0%", "\u2013"))
 })
+
+test_that("a unit keeps its name unless UNITS adds a multiplier", {
+  ds <- list(info = list(unit_notes = c(Euro = "Exact Amount", "Pure number" = "Exact Amount")))
+  expect_equal(unit_title(ds, "Euro"), "Euro")
+  expect_equal(unit_title(ds, "Pure number"), "Pure number")
+  ds$info$unit_notes <- c(Euro = "Euro, millions", "Pure number" = "Thousands")
+  expect_equal(unit_title(ds, "Euro"), "Euro, millions")
+  expect_equal(unit_title(ds, "Pure number"), "Pure number, thousands")
+  expect_equal(unit_title(list(info = list(unit_notes = character())), "Euro"), "Euro")
+})
+
+test_that("a stock release that compared YTD with December keeps month labels", {
+  dates <- monthly("2025-01-01", "2026-08-01")
+  ytd <- calc_ytd(series_df(dates, seq_along(dates)), measure_type = "stock")
+  ytd$variance_type <- "YTD"
+  now <- list(info = list(measure_type = "stock"), variances = ytd)
+  expect_false(ytd_since_december(now))
+  old <- now
+  old$variances$comparison_date <- as.Date(paste0(lubridate::year(dates) - 1, "-12-01"))
+  expect_true(ytd_since_december(old))
+  aug <- as.Date("2026-08-01")
+  expect_equal(variance_labels("YTD", aug, NA, TRUE),
+               list(period = "Aug 2026", comparison = "Dec 2025"))
+  expect_equal(variance_labels("YTD", aug, NA)$comparison, "Jan\u2013Aug 2025")
+})

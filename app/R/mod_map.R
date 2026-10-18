@@ -123,7 +123,7 @@ mod_map_server <- function(id, state) {
     fmt_metric <- function(x) {
       if (input$metric %in% c("share", "pct")) {
         if (input$metric == "share") paste0(formatC(100 * x, format = "f", digits = 1), "%") else fmt_pct(x)
-      } else fmt_num(x)
+      } else fmt_num(x, if (input$metric == "value") state$digits() else 2)
     }
 
     output$selection_note <- shiny::renderUI({
@@ -180,7 +180,7 @@ mod_map_server <- function(id, state) {
         rank = reactable::colDef(name = "#", width = 44),
         county = reactable::colDef(name = "County"),
         value = reactable::colDef(name = unit_title(state$ds(), state$unit()), align = "right",
-                                  format = reactable::colFormat(separators = TRUE, digits = 2)),
+                                  format = reactable::colFormat(separators = TRUE, digits = state$digits())),
         metric = reactable::colDef(name = metric_label(), align = "right")
       )
       if (input$metric == "value") cols$metric <- reactable::colDef(show = FALSE)
@@ -212,7 +212,7 @@ mod_map_server <- function(id, state) {
       o <- state$ds()$obs[state$ds()$obs$series_key == key, ]
       p <- plotly::plot_ly(o, x = ~date, y = ~value, type = "scatter", mode = "lines",
                            line = list(color = SERIES_COLOURS[1], width = 2),
-                           hovertemplate = "%{x|%b %Y}: %{y:,.2f}<extra></extra>")
+                           hovertemplate = paste0("%{x|%b %Y}: %{y:,.", state$digits(), "f}<extra></extra>"))
       plotly_base(p, unit_title(state$ds(), state$unit()), legend = FALSE)
     })
 

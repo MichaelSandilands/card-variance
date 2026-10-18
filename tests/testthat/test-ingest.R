@@ -59,3 +59,9 @@ test_that("county names normalise to the 26 counties", {
   expect_equal(normalise_county(x),
                c("DUBLIN", "DUBLIN", "CORK", "LAOIS", "TIPPERARY", "GALWAY", "DUBLIN"))
 })
+
+test_that("decimals ignore the zero padding in the Bank's files", {
+  expect_equal(source_decimals(c("9716214479.63000000", "264742716.00000000")), 2L)
+  expect_equal(source_decimals(c("264742716.00000000", "12.50000000")), 1L)
+  expect_equal(source_decimals(c("1630901", "8640384")), 0L)
+})

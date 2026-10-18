@@ -11,6 +11,7 @@ mod_trend_ui <- function(id) {
         shiny::uiOutput(ns("level_title"), inline = TRUE), download_buttons(ns, "dl_level"))),
       bslib::card_body(plotly::plotlyOutput(ns("level"), height = "100%"), padding = c(8, 12))
     ),
+    shiny::uiOutput(ns("ytd_card")),
     bslib::card(
       full_screen = TRUE, height = "400px",
       bslib::card_header(shiny::div(class = "card-head",
@@ -26,6 +27,7 @@ mod_trend_ui <- function(id) {
 
 mod_trend_server <- function(id, state) {
   shiny::moduleServer(id, function(input, output, session) {
+    ns <- session$ns
     plotted <- shiny::reactive({
       s <- state$series()
       utils::head(s, MAX_SERIES)
@@ -80,12 +82,12 @@ mod_trend_server <- function(id, state) {
       caption <- if (nrow(state$series()) > 1) paste0("Headline figures for the first series: ", who, ".")
                  else paste0("Headline figures for ", who, ".")
       cells <- c(
-        list(ledger_cell("Latest month", fmt_num(h$latest$value), month_label(h$latest$date),
+        list(ledger_cell("Latest month", fmt_num(h$latest$value, state$digits()), month_label(h$latest$date),
                          unit_title(d, s$unit[1]), lead = TRUE)),
         lapply(h$variances, function(v) {
           if (is.na(v$pct) && is.na(v$abs)) return(ledger_cell(v$type, "\u2013", "No valid period yet"))
           ledger_cell(v$type, fmt_pct(v$pct), paste(v$period, "against", v$comparison),
-                      paste("Change", fmt_num(v$abs)), active = identical(v$type, state$vtype()))
+                      paste("Change", fmt_num(v$abs, state$digits())), active = identical(v$type, state$vtype()))
         })
       )
       shiny::div(class = "ledger",
@@ -103,13 +105,14 @@ mod_trend_server <- function(id, state) {
       shiny::validate(shiny::need(nrow(o) > 0, "No data for this selection."))
       keys <- unique(o$series_key)
       col <- colours()
+      dg <- state$digits()
       p <- plotly::plot_ly()
       for (i in seq_along(keys)) {
         x <- o[o$series_key == keys[i], ]
         p <- plotly::add_trace(
           p, x = x$date, y = x$value, type = "scatter", mode = "lines", name = x$series[1],
           line = list(color = col[[keys[i]]], width = 2),
-          hovertemplate = paste0(x$series[1], ": %{y:,.2f}<extra></extra>")
+          hovertemplate = paste0(x$series[1], ": %{y:,.", dg, "f}<extra></extra>")
         )
       }
       ann <- annotation_lines(state)
@@ -125,6 +128,7 @@ mod_trend_server <- function(id, state) {
       keys <- unique(plotted()$series_key)
       col <- colours()
       pct <- identical(input$as, "pct")
+      dg <- state$digits()
       p <- plotly::plot_ly()
       for (i in seq_along(keys)) {
         x <- v[v$series_key == keys[i], ]
@@ -132,8 +136,8 @@ mod_trend_server <- function(id, state) {
         y <- if (pct) 100 * x$pct_change else x$abs_change
         y[x$status != "ok"] <- NA
         hover <- sprintf("%s<br>%s vs %s<br>%s vs %s<br>Change %s (%s)",
-                         x$series, x$period, x$compared_with, fmt_num(x$value), fmt_num(x$comparison_value),
-                         fmt_num(x$abs_change), fmt_pct(x$pct_change))
+                         x$series, x$period, x$compared_with, fmt_num(x$value, dg), fmt_num(x$comparison_value, dg),
+                         fmt_num(x$abs_change, dg), fmt_pct(x$pct_change))
         p <- plotly::add_trace(
           p, x = x$date, y = y, type = "scatter", mode = "lines+markers", name = x$series[1],
           line = list(color = col[[keys[i]]], width = 2),
@@ -147,6 +151,62 @@ mod_trend_server <- function(id, state) {
       plotly_base(p, ytitle, legend = length(keys) > 1) |>
         plotly::layout(hovermode = "closest", shapes = list(zero),
                        xaxis = list(type = "date", hoverformat = "%b %Y", range = xrange()))
+    })
+
+    # Year to date, one line per year, for the first plotted series: the figures YTD compares.
+    ytd_years <- shiny::reactive({
+      d <- state$ds()
+      s <- plotted()
+      shiny::req(nrow(s) > 0)
+      shiny::validate(shiny::need(!ytd_since_december(d),
+        "This release compared stocks with the previous December, so it has no year-to-date averages."))
+      yrs <- lubridate::year(state$range())
+      v <- d$variances[d$variances$series_key == s$series_key[1] & d$variances$variance_type == "YTD" &
+                         !is.na(d$variances$value), c("date", "value")]
+      v$year <- lubridate::year(v$date)
+      v <- v[v$year >= yrs[1] & v$year <= yrs[2], ]
+      v <- v[v$year %in% utils::tail(sort(unique(v$year)), length(YEAR_COLOURS)), ]
+      shiny::validate(shiny::need(nrow(v) > 0, "No complete year-to-date periods for this selection."))
+      v[order(v$date), ]
+    })
+
+    output$ytd_card <- shiny::renderUI({
+      if (state$vtype() != "YTD") return(NULL)
+      bslib::card(
+        full_screen = TRUE, height = "400px",
+        bslib::card_header(shiny::div(class = "card-head",
+          shiny::uiOutput(ns("ytd_title"), inline = TRUE), download_buttons(ns, "dl_ytd"))),
+        bslib::card_body(plotly::plotlyOutput(ns("ytd_years"), height = "100%"), padding = c(8, 12))
+      )
+    })
+
+    output$ytd_title <- shiny::renderUI({
+      d <- state$ds()
+      s <- plotted()
+      shiny::req(nrow(s) > 0)
+      what <- if (identical(d$info$measure_type, "stock")) "average" else "total"
+      sub <- paste0("January-to-month ", what, ", ", unit_title(d, s$unit[1]), ".")
+      if (nrow(s) > 1) sub <- paste(sub, "First series:", series_full_names(s[1, ], d$series, d$dims))
+      shiny::span(class = "card-title", "Year to date by year", shiny::span(class = "card-sub", sub))
+    })
+
+    output$ytd_years <- plotly::renderPlotly({
+      v <- ytd_years()
+      years <- sort(unique(v$year))
+      col <- utils::tail(YEAR_COLOURS, length(years))   # latest year darkest
+      dg <- state$digits()
+      p <- plotly::plot_ly()
+      for (i in seq_along(years)) {
+        x <- v[v$year == years[i], ]
+        p <- plotly::add_trace(
+          p, x = month.abb[lubridate::month(x$date)], y = x$value, type = "scatter", mode = "lines",
+          name = as.character(years[i]), line = list(color = col[i], width = 2),
+          hovertemplate = paste0(years[i], ": %{y:,.", dg, "f}<extra></extra>")
+        )
+      }
+      plotly_base(p, unit_title(state$ds(), state$unit()), legend = length(years) > 1) |>
+        plotly::layout(xaxis = list(type = "category", categoryorder = "array", categoryarray = month.abb),
+                       legend = list(traceorder = "reversed"))
     })
 
     output$excluded <- shiny::renderUI({
@@ -172,6 +232,13 @@ mod_trend_server <- function(id, state) {
       names(out)[match(d$dims, names(out))] <- unname(d$dim_labels[d$dims])
       out
     }, function() paste0(state$ds()$id, "_levels"), "dl_level")
+    download_handlers(output, state, function() {
+      d <- state$ds()
+      s <- plotted()[1, ]
+      v <- ytd_years()
+      tibble::tibble(series = series_full_names(s, d$series, d$dims), series_key = s$series_key,
+                     year = v$year, month = month.abb[lubridate::month(v$date)], ytd_value = v$value)
+    }, function() paste0(state$ds()$id, "_ytd_by_year"), "dl_ytd")
     download_handlers(output, state, function() {
       vrows() |> dplyr::select(series, series_key, variance_type, period, compared_with, value,
                                comparison_value, abs_change, pct_change, status)
