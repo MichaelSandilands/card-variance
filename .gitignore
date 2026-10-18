@@ -50,3 +50,9 @@ po/*~
 rsconnect/
 
 data/
+
+# Local pins board (development); production releases live in R2
+pins-local/
+
+# Written by run_pipeline.R
+pipeline_summary.md
